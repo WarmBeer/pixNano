@@ -30,15 +30,15 @@ function dragElement(elmnt) {
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
+    pos1 = pos3 - (e.clientX);
+    pos2 = pos4 - (e.clientY);
     pos3 = e.clientX;
     pos4 = e.clientY;
     // set the element's new position:
-    pos1 = (zX > 3) ? (pos1*3/20) : (pos1*zX/20);
-    pos2 = (zX > 3) ? (pos2*3/20) : (pos2*zX/20);
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    //pos1 = (zX > 3) ? (pos1*3/20) : (pos1*zX/20);
+    //pos2 = (zX > 3) ? (pos2*3/20) : (pos2*zX/20);
+    elmnt.style.top = (elmnt.offsetTop - (pos2/zX)) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - (pos1/zX)) + "px";
   }
 
   function closeDragElement() {
