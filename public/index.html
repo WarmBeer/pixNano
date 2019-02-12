@@ -8,14 +8,25 @@
     </head>
     <body>
         <div class="controls">
-            Color: <input type="color" id="color">
+            <span style="height: 35px;width: 100%;line-height: 2rem;">Color: <input class="color" type="color" id="color"></span>
             <br>
             <form action="" style="margin-bottom: 0px;margin-top: 15px;">
-                <input type="button" id="1" value="EDIT MODE" style="color:blue" onclick="toggle(this);">
+                <input type="button" id="1" value="EDIT MODE" onclick="toggle(this);">
             </form>
             <br>
             <button id="toggleGrid">Toggle Grid</button>
         </div>
+        <!---
+        <div class="chat">
+            <input type="text" id="text" value="" placeholder="Type something..">
+            <div id="chat-window">
+                <div class="container">
+                  <p>Hello. How are you today?</p>
+                  <span class="time-right">12:00</span>
+                </div>
+            </div>
+        </div>
+--->
         <div id="canvas-container">
             <div id="zoom-controller" style="transform: scale(2.5);">
                 <div id="camera-controller" style="height: 250px; width: 250px; top:0px; left:0px;">
