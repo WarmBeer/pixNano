@@ -1,7 +1,7 @@
 var editMode = false;
 var zX = 2.5;
 var scale = 1
-var maxZoom = 16
+var maxZoom = 32
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
