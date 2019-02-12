@@ -16,6 +16,7 @@ body {
     cursor: -moz-move;
     cursor: -webkit-move;
 }
+
 #place {
     position: absolute;
     transform-origin: 0 0;
@@ -66,16 +67,12 @@ body {
 
 #grid {
     position: absolute;
-    width: 110vw;
-    height: 110vh;
-    background-size: 16px 16px;
-    pointer-events: none;
-    opacity: 0.5;
-    background-image: linear-gradient(to right, #ccc 0.1px, transparent 1px), linear-gradient(to bottom, #ccc 1px, transparent 1px);
-    top: 0;
-    left: 0;
     display: none;
-    transition: 250ms ease-out opacity;
-    z-index: 1;
-    background-position: -0.5px -0.5px;
+    z-index: 4;
+    opacity: 0.25;
+    pointer-events: none;
+    transform-origin: 0 0;
+    image-rendering: -webkit-optimize-contrast; */
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }

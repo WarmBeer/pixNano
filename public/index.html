@@ -2,7 +2,7 @@
     <head>
         <title>pixNano</title>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="https://code.jquery.com/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="js/place.js"></script>
         <link rel="stylesheet" href="/css/style.css">
     </head>
@@ -13,15 +13,39 @@
             <form action="" style="margin-bottom: 0px;margin-top: 15px;">
                 <input type="button" id="1" value="EDIT MODE" style="color:blue" onclick="toggle(this);">
             </form>
+            <br>
+            <button id="toggleGrid">Toggle Grid</button>
         </div>
         <div id="canvas-container">
-            <div id="grid" style="background-size: 1px 1px;" class="show"></div>
             <div id="zoom-controller" style="transform: scale(2.5);">
                 <div id="camera-controller" style="height: 250px; width: 250px; top:0px; left:0px;">
                     <div id="template-images"></div>
-                    
-                    <canvas id="place" height="2500" width="2500"></canvas></div>
+                    <canvas id="place" height="250" width="250"></canvas>
+                    <canvas id="grid" height="250" width="250"></canvas>
+                </div>
             </div>
         </div>
     </body>
+    <script>
+var grid = document.getElementById("grid");
+var gridctx = grid.getContext("2d");
+for(var row = 0;row<250;row++){
+for(var i = 0;i<250;i++) {
+if(i%2==0) {
+if(row%2==0) {
+gridctx.fillStyle = "#D3D3D3";
+} else {
+gridctx.fillStyle = "#FFF";
+}
+} else {
+if(row%2==1) {
+gridctx.fillStyle = "#D3D3D3";
+} else {
+gridctx.fillStyle = "#FFF";
+}
+}
+gridctx.fillRect(i,row,1,1);
+}
+}
+</script>
 </html>

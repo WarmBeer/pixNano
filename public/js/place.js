@@ -122,5 +122,9 @@ $(document).ready(() => {
 if(!editMode) {
     dragElement(document.getElementById("camera-controller"));
 }
+    
+$("#toggleGrid").click(function(){
+    $("#grid").toggleClass("show");
+});
 
 })
