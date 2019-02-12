@@ -1,0 +1,81 @@
+html, body {margin: 0; height: 100%; overflow: hidden}
+
+body {
+    background-color: #0f1121;
+    font-family: "Nunito", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6rem;
+    letter-spacing: 0.02em;
+    font-weight: 400;
+}
+
+#zoom-controller {
+    transform-origin: center;
+    z-index: 1;
+    cursor: move;
+    cursor: -moz-move;
+    cursor: -webkit-move;
+}
+#place {
+    position: absolute;
+    transform-origin: 0 0;
+    image-rendering: -webkit-optimize-contrast; */
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+#canvas-container {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    background-color: #ddd;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    transition: 0.25s right ease-out;
+}
+
+#camera-controller {
+    position: relative;
+    height: 250px;
+    width: 250px;
+}
+
+.controls {
+    z-index: 5;
+    width: 150px;
+    position: absolute;
+    background-color: rgb(15, 17, 33);
+    color: #4a90e2;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 15px;
+    padding: 15px;
+}
+
+#grid.show {
+    display: block!important;;
+}
+
+#grid {
+    position: absolute;
+    width: 110vw;
+    height: 110vh;
+    background-size: 16px 16px;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: linear-gradient(to right, #ccc 0.1px, transparent 1px), linear-gradient(to bottom, #ccc 1px, transparent 1px);
+    top: 0;
+    left: 0;
+    display: none;
+    transition: 250ms ease-out opacity;
+    z-index: 1;
+    background-position: -0.5px -0.5px;
+}

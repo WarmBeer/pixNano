@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>pixNano</title>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery.min.js"></script>
+        <script src="js/place.js"></script>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
+        <div class="controls">
+            Color: <input type="color" id="color">
+            <br>
+            <form action="" style="margin-bottom: 0px;margin-top: 15px;">
+                <input type="button" id="1" value="EDIT MODE" style="color:blue" onclick="toggle(this);">
+            </form>
+        </div>
+        <div id="canvas-container">
+            <div id="grid" style="background-size: 1px 1px;" class="show"></div>
+            <div id="zoom-controller" style="transform: scale(2.5);">
+                <div id="camera-controller" style="height: 250px; width: 250px; top:0px; left:0px;">
+                    <div id="template-images"></div>
+                    
+                    <canvas id="place" height="2500" width="2500"></canvas></div>
+            </div>
+        </div>
+    </body>
+</html>
