@@ -48,6 +48,29 @@ function dragElement(elmnt) {
   }
 }
 
+function renderGrid() {
+    var grid = document.getElementById("grid");
+var gridctx = grid.getContext("2d");
+for(var row = 0;row<250;row++){
+for(var i = 0;i<250;i++) {
+if(i%2==0) {
+if(row%2==0) {
+gridctx.fillStyle = "#D3D3D3";
+} else {
+gridctx.fillStyle = "#FFF";
+}
+} else {
+if(row%2==1) {
+gridctx.fillStyle = "#D3D3D3";
+} else {
+gridctx.fillStyle = "#FFF";
+}
+}
+gridctx.fillRect(i,row,1,1);
+}
+}
+}
+
 function toggle(button) {
     console.log(editMode);
   if(document.getElementById("1").value=="EDIT MODE"){
@@ -69,6 +92,8 @@ $(document).ready(() => {
     var ctx = canvas.getContext("2d")
     
     canvas.addEventListener("click", getClickPosition, false)
+    
+    renderGrid()
     
     function getClickPosition(e) {
         if(editMode) {
