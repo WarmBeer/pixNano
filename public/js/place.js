@@ -3,6 +3,7 @@ var zX = 2.5;
 var scale = 1
 var maxZoom = 32
 
+
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (document.getElementById(elmnt.id + "header")) {
@@ -95,8 +96,49 @@ $(document).ready(() => {
     
     renderGrid()
     
+    var eyedropperIsActive=false; 
+
+    // Activate reading pixel colors when a #startDropper button is clicked
+    $("#startDropper").click(function(e){eyedropperIsActive=!eyedropperIsActive;$("#place").toggleClass("eyeDropper");$("#startDropper").toggleClass("active");
+    });
+
+    // if the tool is active, report the color under the mouse
+    $("#place").mousemove(function (e) {
+        handleMouseMove(e);
+    });
+
+    // when the user clicks on the canvas, turn off the tool 
+    // (the last color will remain selected)
+    $("#place").click(function(e){
+        if(eyedropperIsActive) {
+            eyedropperIsActive=false;
+            $("#place").removeClass("eyeDropper");
+            $("#startDropper").removeClass("active");
+        }
+    });
+    
+    function getPixelColor(x, y) {
+        var pxData = ctx.getImageData(x,y,1,1);
+        return("rgb("+pxData.data[0]+","+pxData.data[1]+","+pxData.data[2]+")");
+    }
+    
+    function handleMouseMove(e){
+
+      if(!eyedropperIsActive){return;}
+        
+        var offset = $("#place").offset()
+
+      mouseX = Math.floor(((e.clientX - offset.left)/zX)/scale)
+      mouseY = Math.floor(((e.clientY - offset.top)/zX)/scale)
+
+      // Put your mousemove stuff here
+      var eyedropColor=getPixelColor(mouseX,mouseY);
+      $("#color").val(rgb2hex(eyedropColor));
+
+    }
+    
     function getClickPosition(e) {
-        if(editMode) {
+        if(editMode && !eyedropperIsActive) {
             var offset = $(this).offset()
             var xPosition = Math.floor(((e.clientX - offset.left)/zX)/scale)+1
             var yPosition = Math.floor(((e.clientY - offset.top)/zX)/scale)+1

@@ -151,3 +151,26 @@ input, button {
 .container p {
     margin: 0;
 }
+
+.eyeDropper {
+    cursor: url('../cursors/eyedropper.cur'), auto;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#startDropper {
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    margin-top: 2.5px;
+    float: right;
+    background-color: transparent;
+}
+
+.active {
+    background-color: #3498db!important;
+}

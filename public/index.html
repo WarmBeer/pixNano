@@ -4,11 +4,12 @@
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="js/place.js"></script>
+        <script src="js/color-converter.js"></script>
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
         <div class="controls">
-            <span style="height: 35px;width: 100%;line-height: 2rem;">Color: <input class="color" type="color" id="color"></span>
+            <span style="height: 35px;width: 100%;line-height: 2rem;">Color: <button id="startDropper"><img src="icons/eyedropper.png" height="auto"></button><input class="color" type="color" id="color"></span>
             <br>
             <form action="" style="margin-bottom: 0px;margin-top: 15px;">
                 <input type="button" id="1" value="EDIT MODE" onclick="toggle(this);">
