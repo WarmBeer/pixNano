@@ -68,12 +68,22 @@ body {
 .chat {
     top: 200px;
     z-index: 5;
-    width: 160px;
-    height: 300px;
+    width: 190px;
+    height: 400px;
     position: absolute;
     color: #fff;
     margin: 0px;
-    padding: 0px;
+    padding: 15px;
+    -webkit-mask-image: linear-gradient(to top, transparent 5%, black 20%, black 75%);
+    mask-image: linear-gradient(to top, transparent 5%, black 20%, black 75%);
+}
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
 }
 
 #grid.show {
@@ -130,26 +140,30 @@ input, button {
 }
 
 .container {
-    background-color: #E5E5EAAA;
+    background-color: #000000AA;
+    background: linear-gradient(to right, #005c97, #363795);
     border: 1px solid transparent;
     border-radius: 8px;
     cursor: default;
-    width: 190px;
+    width: 178px;
     text-transform: capitalize;
     text-shadow: none;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    padding: 10px;
+    padding: 5px;
     margin: 10px 0;
     font-size: 14px;
 }
 
 .time-right {
-  float: right;
-  color: #aaa;
+    float: right;
+    position: relative;
+    top: -16px;
+    color: #3498db;
 }
 
 .container p {
     margin: 0;
+    max-width: 100%;
 }
 
 .eyeDropper {
@@ -173,4 +187,10 @@ img {
 
 .active {
     background-color: #3498db!important;
+}
+
+#chat-window {
+    max-height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }

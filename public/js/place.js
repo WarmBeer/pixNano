@@ -2,7 +2,8 @@ var editMode = false;
 var zX = 2.5;
 var scale = 1
 var maxZoom = 32
-
+var pos3 = 0;
+var pos4 =0;
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -14,25 +15,25 @@ function dragElement(elmnt) {
     elmnt.onmousedown = dragMouseDown;
   }
 
-  function dragMouseDown(e) {
-      if(!editMode) {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-      }
-  }
+function dragMouseDown(e) {
+    if(!editMode) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+    }
+}
 
   function elementDrag(e) {
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
-    pos1 = pos3 - (e.clientX);
-    pos2 = pos4 - (e.clientY);
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
     // set the element's new position:
@@ -91,6 +92,7 @@ $(document).ready(() => {
     var socket = io()
     var canvas = $("#place")[0]
     var ctx = canvas.getContext("2d")
+    var message = $("#text")[0]
     
     canvas.addEventListener("click", getClickPosition, false)
     
@@ -114,6 +116,16 @@ $(document).ready(() => {
             eyedropperIsActive=false;
             $("#place").removeClass("eyeDropper");
             $("#startDropper").removeClass("active");
+        }
+    });
+    
+    message.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            socket.emit("message", {
+                message: $("#text").val()
+            })
+            $("#text").val("")
         }
     });
     
@@ -161,6 +173,11 @@ $(document).ready(() => {
                 ctx.fillRect(colIndex * scale, rowIndex * scale, scale, scale)
             })
         })
+    })
+    
+    socket.on("newMessage", messageData => {
+        var time = new Date();
+        $("<div class='container'><p>"+ messageData +"</p><span class='time-right'>" + time.getHours() + ":" + time.getMinutes() + "</span></div>").prependTo("#chat-window");
     })
     
     $("#submit").click(() => {
