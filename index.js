@@ -9,8 +9,6 @@ const CANVAS_COLS = 250
 const fs = require("fs")
 
 var canvas = [ ]
-var messages = {}
-var pixels = {}
 
 function saveCanvas() {
     fs.writeFile('canvas.txt', JSON.stringify(canvas), (err) => {
@@ -30,7 +28,7 @@ function loadCanvas() {
 
 function saveBackup() {
     var now = new Date();
-    fs.writeFile("backups/canvas - "+ now.getDate()+'-'+ now.getMonth()+'-'+ now.getFullYear()+'-'+ now.getTime() +".txt", JSON.stringify(canvas), (err) => {
+    fs.copyFile('canvas.txt', "backups/canvas - "+ now.getDate()+'-'+ now.getMonth()+'-'+ now.getFullYear()+'-'+ now.getTime() +".txt", (err) => {
         if (err) throw err;
         console.log('Backup made');
     });
@@ -52,38 +50,16 @@ if (fs.existsSync('canvas.txt')) {
 app.use(express.static("public"))
 
 io.on("connection", socket => {
-    messages[socket.id] = new Date();
-    pixels[socket.id] = new Date();
     socket.emit("canvas", canvas)
     
     socket.on("color", data => {
-        var now = new Date();
-        var seconds = (now.getTime() - pixels[socket.id].getTime()) / 1000;
-        if(seconds > 0.1 && data != "") {
-            if(data.row <= CANVAS_ROWS && data.row > 0 && data.col <= CANVAS_COLS && data.col > 0){
-                canvas[data.row - 1][data.col - 1] = data.color
-                io.emit("canvas", canvas)
-                pixels[socket.id] = new Date();
-            }
-        } else {
-            return
-        }
-    })
-    
-    socket.on("message", data => {
-        var now = new Date();
-        var seconds = (now.getTime() - messages[socket.id].getTime()) / 1000;
-        if(seconds > 1 && data != "") {
-            var message = data.message.replace(/(<([^>]+)>)/ig,"");
-            io.emit("newMessage", message)
-            messages[socket.id] = new Date();
-        } else {
-            return
+        if(data.row <= CANVAS_ROWS && data.row > 0 && data.col <= CANVAS_COLS && data.col > 0){
+            canvas[data.row - 1][data.col - 1] = data.color
+            io.emit("canvas", canvas)
+            saveCanvas()
         }
     })
 })
 
 setInterval(saveBackup, 1000 * 60 * 10);
-setInterval(saveCanvas, 1000 * 60 * 1);
-
 server.listen(3000)
