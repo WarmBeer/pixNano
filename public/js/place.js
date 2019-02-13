@@ -166,6 +166,14 @@ $(document).ready(() => {
         }
     }
     
+    function getTimeString() {
+        var time = new Date();
+        var hours = (time.getHours() < 10) ? ('0'+time.getHours()) : time.getHours();
+        var minutes = (time.getMinutes() < 10) ? ('0'+time.getMinutes()) : time.getMinutes();
+        var timeString = hours + ':' + minutes;
+        return timeString;
+    }
+    
     socket.on("canvas", canvasData => {
         canvasData.forEach((row, rowIndex) => {
             row.forEach((col, colIndex) => {
@@ -176,8 +184,17 @@ $(document).ready(() => {
     })
     
     socket.on("newMessage", messageData => {
+        
+        $('<div class="container"><span class="username">'+messageData.username+'<span class="time-right">'+getTimeString()+'</span></span><p>'+messageData.message+'</p></div>').prependTo("#chat-window");
+    })
+    
+    socket.on("alert", messageData => {
         var time = new Date();
-        $("<div class='container'><p>"+ messageData +"</p><span class='time-right'>" + time.getHours() + ":" + time.getMinutes() + "</span></div>").prependTo("#chat-window");
+        $('<div class="container alert"><span class="username">SERVER ALERT<span class="time-right alttime">'+getTimeString()+'</span></span><p>'+messageData+'</p></div>').prependTo("#chat-window");
+    })
+    
+    socket.on("users", users => {
+        $("#online").text(users);
     })
     
     $("#submit").click(() => {
