@@ -4,6 +4,8 @@ var scale = 1
 var maxZoom = 32
 var pos3 = 0;
 var pos4 =0;
+var lastPlaced = new Date();
+var fullCanvas = [];
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -152,14 +154,21 @@ $(document).ready(() => {
     function getClickPosition(e) {
         if(editMode && !eyedropperIsActive) {
             var offset = $(this).offset()
-            var xPosition = Math.floor(((e.clientX - offset.left)/zX)/scale)+1
-            var yPosition = Math.floor(((e.clientY - offset.top)/zX)/scale)+1
-
-            socket.emit("color", {
-                col: xPosition,
-                row: yPosition,
-                color: $("#color").val()
-            })
+            var xPosition = Math.floor(((e.clientX - offset.left)/zX)/scale)
+            var yPosition = Math.floor(((e.clientY - offset.top)/zX)/scale)
+            var now = new Date()
+            var seconds = (now.getTime() - lastPlaced.getTime()) / 1000;
+            if(seconds > 0.1) {
+                lastPlaced = now;
+                ctx.fillStyle = $("#color").val()
+                ctx.fillRect(xPosition * scale, yPosition * scale, scale, scale)
+                socket.emit("color", {
+                    col: xPosition,
+                    row: yPosition,
+                    color: $("#color").val()
+                })
+            }
+            
 
             console.log("Clicked!", xPosition, yPosition, zX)
             console.log("e!",((e.clientX - offset.left)/zX), ((e.clientY - offset.top)/zX), zX)
@@ -175,12 +184,29 @@ $(document).ready(() => {
     }
     
     socket.on("canvas", canvasData => {
-        canvasData.forEach((row, rowIndex) => {
-            row.forEach((col, colIndex) => {
-                ctx.fillStyle = col
-                ctx.fillRect(colIndex * scale, rowIndex * scale, scale, scale)
+        if(fullCanvas == canvasData) {
+            return
+        } else {
+            canvasData.forEach((row, rowIndex) => {
+                row.forEach((col, colIndex) => {
+                    ctx.fillStyle = col
+                    ctx.fillRect(colIndex * scale, rowIndex * scale, scale, scale)
+                })
             })
+            fullCanvas = canvasData;
+        }
+    })
+    
+    socket.on("update", updateDate => {
+        if(fullCanvas != []) {
+        updateDate.forEach((change) => {
+            ctx.fillStyle = change.color
+            ctx.fillRect(change.col * scale, change.row * scale, scale, scale)
+            fullCanvas[change.row][change.col] = color
         })
+        } else {
+            socket.emit('canvas')
+        }
     })
     
     socket.on("newMessage", messageData => {
@@ -195,14 +221,6 @@ $(document).ready(() => {
     
     socket.on("users", users => {
         $("#online").text(users);
-    })
-    
-    $("#submit").click(() => {
-        socket.emit("color", {
-            col: parseInt($("#x-coord").val()),
-            row: parseInt($("#y-coord").val()),
-            color: $("#color").val()
-        })
     })
     
     $("#canvas-container")[0].addEventListener('wheel', function (e) {
