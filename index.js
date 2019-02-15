@@ -1,14 +1,16 @@
 const express = require("express"),
       app = express(),
       server = require("http").createServer(app),
-      io = require("socket.io")(server)
+      io = require("socket.io")(server),
+      AdmZip = require('adm-zip'),
+      fs = require("fs")
 
-const CANVAS_ROWS = 250
-const CANVAS_COLS = 250
 
-const fs = require("fs")
+const CANVAS_ROWS = 500
+const CANVAS_COLS = 500
+const project_name = "Cartographer2"
 const names = [
-    "Masterchief", "Coconut", "Cortana", "Nerd", "Johan", "Cowmilk", "Bitterbal", "Worstenbroodje", "Heineken", "Cold Ketchup", "Heinz", "Mars", "Johnson", "Bill Gates", "Recon", "Beer", "Chicken", "Rooster", "Wheezy"
+    "Spartan", "Coconut", "Cortana", "Nerd", "Johan", "Cowmilk", "Bitterbal", "Knight", "Heineken", "Cold Ketchup", "Heinz", "Mars", "Johnson", "Bill", "Recon", "Beer", "Chicken", "Rooster", "Wheezy", "Grunt", "Elite", "Arbiter", "Liberal", "Sir", "Marine", "Jul Ma'am", "Chief", "Tomato", "Captain", "Monitor"
 ]
 
 var canvas = [ ]
@@ -16,8 +18,15 @@ var updates = []
 var users = {}
 var clients = 0
 
+var dir = './' + project_name;
+
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+    fs.mkdirSync(dir + '/backups');
+}
+
 function saveCanvas() {
-    fs.writeFile('canvas.txt', JSON.stringify(canvas), (err) => {
+    fs.writeFile(project_name + '/canvas.txt', JSON.stringify(canvas), (err) => {
         if(err) throw err
 
         //console.log("Canvas saved!")
@@ -25,7 +34,7 @@ function saveCanvas() {
 }
 
 function loadCanvas() {
-    fs.readFile('canvas.txt', 'utf-8', (err, canvasData) => {
+    fs.readFile(project_name + '/canvas.txt', 'utf-8', (err, canvasData) => {
         if(err) throw err
 
         canvas = JSON.parse(canvasData)
@@ -33,11 +42,12 @@ function loadCanvas() {
 }
 
 function saveBackup() {
+    var zip = new AdmZip();
     var now = new Date();
-    fs.writeFile("backups/canvas - "+ now.getDate()+'-'+ now.getMonth()+'-'+ now.getFullYear()+'-'+ now.getTime() +".txt", JSON.stringify(canvas), (err) => {
-        if (err) throw err;
-        console.log('Backup made');
-    });
+    var filename = "canvas - "+ now.getDate()+'-'+ now.getMonth()+'-'+ now.getFullYear()+'-'+ now.getTime();
+    var file = JSON.stringify(canvas)
+    zip.addFile(filename + ".txt", Buffer.alloc(file.length, file), "Backup canvas");
+    zip.writeZip(dir + '/backups/' + filename + ".zip");
 }
 
 function getRandomInt(min, max) {
@@ -49,7 +59,7 @@ function generateName(){
 	return name;
 }
 
-if (fs.existsSync('canvas.txt')) {
+if (fs.existsSync(project_name + '/canvas.txt')) {
     loadCanvas()
 
 } else {
@@ -66,13 +76,23 @@ app.use(express.static("public"))
 
 io.on("connection", socket => {
     ++clients
-    console.log(clients)
+    var clientIp = socket.request.connection.remoteAddress;
     
-    users[socket.id] = {
-        "messageTime": new Date(),
-        "pixelTime": new Date(),
-        "name": generateName()
+    if(!(clientIp in users)) {
+        users[clientIp] = {
+            "messageTime": new Date(),
+            "pixelTime": new Date(),
+            "name": generateName()
+        }
+        if(users[clientIp].name == null) {
+            users[clientIp].name = generateName()
+        }
     }
+    
+    socket.emit("confirmed", users[clientIp].name)
+    socket.emit("canvas", canvas)
+    io.emit("alert", "Welcome " + users[clientIp].name + "!")
+    io.emit("users", clients)
     
     socket.on('disconnect', function() {
         --clients
@@ -83,17 +103,14 @@ io.on("connection", socket => {
         socket.emit("canvas", canvas)
     })
     
-    socket.emit("canvas", canvas)
-    io.emit("alert", "Welcome " + users[socket.id].name + "!")
-    io.emit("users", clients)
-    
     socket.on("color", data => {
+        var clientIp = socket.request.connection.remoteAddress;
         var now = new Date();
-        var seconds = (now.getTime() - users[socket.id].pixelTime.getTime()) / 1000;
+        var seconds = (now.getTime() - users[clientIp].pixelTime.getTime()) / 1000;
         if(seconds > 0.1 && data != "") {
             if(data.row <= CANVAS_ROWS && data.row > 0 && data.col <= CANVAS_COLS && data.col > 0){
                 canvas[data.row][data.col] = data.color
-                users[socket.id].pixelTime = new Date();
+                users[clientIp].pixelTime = new Date();
                 updates.push({
                     col: data.col,
                     row: data.row,
@@ -106,25 +123,27 @@ io.on("connection", socket => {
     })
     
     socket.on("message", data => {
+        var clientIp = socket.request.connection.remoteAddress;
         var now = new Date();
-        var seconds = (now.getTime() - users[socket.id].messageTime.getTime()) / 1000;
+        var seconds = (now.getTime() - users[clientIp].messageTime.getTime()) / 1000;
         if(seconds > 1 && data.message != "") {
             var message = data.message.replace(/(<([^>]+)>)/ig,"");
             io.emit("newMessage", {
                 message: message,
-                username: users[socket.id].name
+                username: users[clientIp].name
             })
-            users[socket.id].messageTime = new Date();
+            users[clientIp].messageTime = new Date();
         } else {
             return
         }
     })
 })
 
-setInterval(saveBackup, 1000 * 60 * 10);
-setInterval(saveCanvas, 1000 * 60 * 1)
+setInterval(saveBackup, 1000 * 60 * 0.1);
+setInterval(saveCanvas, 1000 * 10)
 
-setInterval(function(){io.emit('update', updates);updates = [];},3000)
-setInterval(function(){io.emit('canvas', canvas);},30000)
+setInterval(function(){io.emit('update', updates);updates = [];},1200)
+setInterval(function(){io.emit('canvas', canvas);},24000)
 
 server.listen(3000)
+console.log('Server successfully started on: ' + project_name)

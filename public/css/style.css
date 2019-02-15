@@ -116,6 +116,7 @@ input, button {
     border: 0;
     text-transform: uppercase;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 .color {
@@ -226,4 +227,11 @@ img {
 }
 #online {
     color: white;
+    font-size: 14px;
+}
+
+#username {
+    float: right;
+    color: #3498db;
+    font-size: 14px;
 }

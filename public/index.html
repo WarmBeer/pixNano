@@ -5,7 +5,15 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="js/place.js"></script>
         <script src="js/color-converter.js"></script>
+        <script src="js/jquery-ui.js"></script>
         <link rel="stylesheet" href="/css/style.css">
+        <!---
+        <script>
+        $( function() {
+            $( "#zoom-controller" ).draggable();
+        } );
+        </script>
+--->
     </head>
     <body>
         <div class="controls">
@@ -19,7 +27,7 @@
         </div>
         
         <div class="chat">
-            <span><span class="greenDot"> </span><span id="online">0</span></span>
+            <span><span class="greenDot"> </span><span id="online">0</span><span id="username">Unknown</span></span>
             <input type="text" id="text" value="" placeholder="Type something..">
             <div id="chat-window">
                 

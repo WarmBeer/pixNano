@@ -7,86 +7,42 @@ var pos4 =0;
 var lastPlaced = new Date();
 var fullCanvas = [];
 
-function dragElement(elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  if (document.getElementById(elmnt.id + "header")) {
-    // if present, the header is where you move the DIV from:
-    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-  } else {
-    // otherwise, move the DIV from anywhere inside the DIV: 
-    elmnt.onmousedown = dragMouseDown;
-  }
-
-function dragMouseDown(e) {
-    if(!editMode) {
-        e = e || window.event;
-        e.preventDefault();
-        // get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
+function renderGrid() {
+    var grid = document.getElementById("grid");
+    var gridctx = grid.getContext("2d");
+    for(var row = 0;row<250;row++){
+        for(var i = 0;i<250;i++) {
+            if(i%2==0) {
+                if(row%2==0) {
+                    gridctx.fillStyle = "#D3D3D3";
+                } else {
+                    gridctx.fillStyle = "#FFF";
+                }
+            } else {
+                if(row%2==1) {
+                    gridctx.fillStyle = "#D3D3D3";
+                } else {
+                    gridctx.fillStyle = "#FFF";
+                }
+            }
+            gridctx.fillRect(i,row,1,1);
+        }
     }
 }
 
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    //pos1 = (zX > 3) ? (pos1*3/20) : (pos1*zX/20);
-    //pos2 = (zX > 3) ? (pos2*3/20) : (pos2*zX/20);
-    elmnt.style.top = (elmnt.offsetTop - (pos2/zX)) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - (pos1/zX)) + "px";
-  }
-
-  function closeDragElement() {
-    // stop moving when mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
-
-function renderGrid() {
-    var grid = document.getElementById("grid");
-var gridctx = grid.getContext("2d");
-for(var row = 0;row<250;row++){
-for(var i = 0;i<250;i++) {
-if(i%2==0) {
-if(row%2==0) {
-gridctx.fillStyle = "#D3D3D3";
-} else {
-gridctx.fillStyle = "#FFF";
-}
-} else {
-if(row%2==1) {
-gridctx.fillStyle = "#D3D3D3";
-} else {
-gridctx.fillStyle = "#FFF";
-}
-}
-gridctx.fillRect(i,row,1,1);
-}
-}
-}
-
 function toggle(button) {
-    console.log(editMode);
   if(document.getElementById("1").value=="EDIT MODE"){
       editMode = true;  
       document.getElementById("zoom-controller").style.cursor = "default";
       document.getElementById("1").value="VIEW MODE";
+      $('#zoom-controller').draggable( "disable" )
   }
 
   else if(document.getElementById("1").value=="VIEW MODE"){
       editMode = false;  
       document.getElementById("zoom-controller").style.cursor = "move";
       document.getElementById("1").value="EDIT MODE";
+      $('#zoom-controller').draggable( "enable" )
   }
 } 
 
@@ -95,15 +51,18 @@ $(document).ready(() => {
     var canvas = $("#place")[0]
     var ctx = canvas.getContext("2d")
     var message = $("#text")[0]
+    var eyedropperIsActive=false; 
     
     canvas.addEventListener("click", getClickPosition, false)
-    
     renderGrid()
     
-    var eyedropperIsActive=false; 
+    $('#zoom-controller').draggable()
 
     // Activate reading pixel colors when a #startDropper button is clicked
-    $("#startDropper").click(function(e){eyedropperIsActive=!eyedropperIsActive;$("#place").toggleClass("eyeDropper");$("#startDropper").toggleClass("active");
+    $("#startDropper").click(function(e){
+        eyedropperIsActive=!eyedropperIsActive;
+        $("#place").toggleClass("eyeDropper");
+        $("#startDropper").toggleClass("active");
     });
 
     // if the tool is active, report the color under the mouse
@@ -168,10 +127,8 @@ $(document).ready(() => {
                     color: $("#color").val()
                 })
             }
-            
-
-            console.log("Clicked!", xPosition, yPosition, zX)
-            console.log("e!",((e.clientX - offset.left)/zX), ((e.clientY - offset.top)/zX), zX)
+            //console.log("Clicked!", xPosition, yPosition, zX)
+            //console.log("e!",((e.clientX - offset.left)/zX), ((e.clientY - offset.top)/zX), zX)
         }
     }
     
@@ -210,7 +167,6 @@ $(document).ready(() => {
     })
     
     socket.on("newMessage", messageData => {
-        
         $('<div class="container"><span class="username">'+messageData.username+'<span class="time-right">'+getTimeString()+'</span></span><p>'+messageData.message+'</p></div>').prependTo("#chat-window");
     })
     
@@ -221,6 +177,10 @@ $(document).ready(() => {
     
     socket.on("users", users => {
         $("#online").text(users);
+    })
+    
+    socket.on("confirmed", username => {
+        $("#username").text(username);
     })
     
     $("#canvas-container")[0].addEventListener('wheel', function (e) {
@@ -237,10 +197,6 @@ $(document).ready(() => {
         e.preventDefault();
         return;
     });
-
-if(!editMode) {
-    dragElement(document.getElementById("camera-controller"));
-}
     
 $("#toggleGrid").click(function(){
     $("#grid").toggleClass("show");
