@@ -13,8 +13,8 @@ var yPos;
 function renderGrid() {
     var grid = document.getElementById("grid");
     var gridctx = grid.getContext("2d");
-    for(var row = 0;row<250;row++){
-        for(var i = 0;i<250;i++) {
+    for(var row = 0;row<500;row++){
+        for(var i = 0;i<500;i++) {
             if(i%2==0) {
                 if(row%2==0) {
                     gridctx.fillStyle = "#D3D3D3";
