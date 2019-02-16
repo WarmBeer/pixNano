@@ -139,11 +139,11 @@ io.on("connection", socket => {
     })
 })
 
-setInterval(saveBackup, 1000 * 60 * 0.1);
-setInterval(saveCanvas, 1000 * 10)
+setInterval(saveBackup, 1000 * 60 * 1);
+setInterval(saveCanvas, 1000 * 60 * 1)
 
 setInterval(function(){io.emit('update', updates);updates = [];},1200)
 setInterval(function(){io.emit('canvas', canvas);},24000)
 
-server.listen(3000)
+server.listen(3001)
 console.log('Server successfully started on: ' + project_name)

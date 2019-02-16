@@ -46,8 +46,6 @@ body {
 
 #camera-controller {
     position: relative;
-    height: 250px;
-    width: 250px;
 }
 
 .controls {

@@ -1,11 +1,14 @@
 var editMode = false;
-var zX = 2.5;
+var zX = 1.5;
 var scale = 1
 var maxZoom = 32
+var minZoom = 1
 var pos3 = 0;
 var pos4 =0;
 var lastPlaced = new Date();
 var fullCanvas = [];
+var xPos;
+var yPos;
 
 function renderGrid() {
     var grid = document.getElementById("grid");
@@ -56,7 +59,31 @@ $(document).ready(() => {
     canvas.addEventListener("click", getClickPosition, false)
     renderGrid()
     
-    $('#zoom-controller').draggable()
+    $('#zoom-controller').draggable({
+        
+        start: function(event, ui){
+            
+        },
+        
+        drag: function(event, ui){
+            xPos = parseFloat($(this).css("left").replace('px', ""));
+            yPos = parseFloat($(this).css("top").replace('px', ""));
+            
+            xpPos = (500 - xPos)/10;
+            ypPos = (500 - yPos)/10;
+            
+            $(this).css({
+                'transform-origin':         xpPos + '% ' + ypPos + '%',
+                '-webkit-transform-origin': xpPos + '% ' + ypPos + '%'
+            });
+            
+            var $dragme = $(event.target);
+            var dx = ui.position.left - ui.originalPosition.left;
+            var dy = ui.position.top - ui.originalPosition.top;
+            ui.position.left = ui.originalPosition.left + (dx / zX);
+            ui.position.top = ui.originalPosition.top + (dy / zX);
+        }
+    });
 
     // Activate reading pixel colors when a #startDropper button is clicked
     $("#startDropper").click(function(e){
@@ -185,13 +212,14 @@ $(document).ready(() => {
     
     $("#canvas-container")[0].addEventListener('wheel', function (e) {
         var dir;
+        
 
         dir = (e.deltaY > 0) ? -0.1 : 0.1;
         dir = (zX>4) ? dir*4 : dir;
-        if(dir > 0 && zX <= maxZoom || dir < 0 && zX > 1.5) {
+        if(dir > 0 && zX <= maxZoom || dir < 0 && zX > minZoom) {
             zX += dir;
             if(zX > maxZoom) zX = maxZoom;
-            if(zX < 1.5) zX = 1.5;
+            if(zX < minZoom) zX = minZoom;
             $("#zoom-controller")[0].style.transform = 'scale(' + zX + ')';
         }
         e.preventDefault();
