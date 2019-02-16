@@ -16,12 +16,12 @@ body {
     cursor: move;
     cursor: -moz-move;
     cursor: -webkit-move;
+    transition: 0.25s right ease-out;
 }
 
 #place {
     position: absolute;
     transform-origin: 0 0;
-    image-rendering: -webkit-optimize-contrast; */
     image-rendering: crisp-edges;
     image-rendering: pixelated;
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.55);
@@ -95,7 +95,6 @@ body {
     opacity: 0.25;
     pointer-events: none;
     transform-origin: 0 0;
-    image-rendering: -webkit-optimize-contrast; */
     image-rendering: crisp-edges;
     image-rendering: pixelated;
 }
