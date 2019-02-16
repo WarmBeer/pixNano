@@ -145,5 +145,5 @@ setInterval(saveCanvas, 1000 * 60 * 1)
 setInterval(function(){io.emit('update', updates);updates = [];},1200)
 setInterval(function(){io.emit('canvas', canvas);},24000)
 
-server.listen(3001)
+server.listen(3000)
 console.log('Server successfully started on: ' + project_name)
