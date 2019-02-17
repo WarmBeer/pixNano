@@ -110,7 +110,7 @@ io.on("connection", socket => {
         var now = new Date();
         var seconds = (now.getTime() - users[clientIp].pixelTime.getTime()) / 1000;
         if(seconds > 0.1 && data != "") {
-            if(data.row <= CANVAS_ROWS && data.row > 0 && data.col <= CANVAS_COLS && data.col > 0){
+            if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
                 canvas[data.row][data.col] = data.color
                 users[clientIp].pixelTime = new Date();
                 updates.push({

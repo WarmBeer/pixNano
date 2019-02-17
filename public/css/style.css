@@ -1,5 +1,9 @@
 html, body {margin: 0; height: 100%; overflow: hidden}
 
+*:focus {
+    outline: none;
+}
+
 body {
     background-color: #000034;
     
@@ -138,7 +142,7 @@ input, button {
 }
 
 .container {
-    background-color: #000000AA;
+    background-color: #363795;
     background: linear-gradient(to right, #005c97, #363795);
     border: 1px solid transparent;
     border-radius: 8px;
