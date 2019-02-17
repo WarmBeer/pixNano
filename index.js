@@ -26,11 +26,13 @@ if (!fs.existsSync(dir)){
 }
 
 function saveCanvas() {
-    fs.writeFile(project_name + '/canvas.txt', JSON.stringify(canvas), (err) => {
-        if(err) throw err
+    if(canvas != []) {
+        fs.writeFile(project_name + '/canvas.txt', JSON.stringify(canvas), (err) => {
+            if(err) throw err
 
-        //console.log("Canvas saved!")
-    })
+            //console.log("Canvas saved!")
+        })
+    }
 }
 
 function loadCanvas() {

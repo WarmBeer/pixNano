@@ -92,7 +92,7 @@ body {
     position: absolute;
     display: none;
     z-index: 4;
-    opacity: 0.25;
+    opacity: 0.5;
     pointer-events: none;
     transform-origin: 0 0;
     image-rendering: crisp-edges;
