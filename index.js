@@ -3,8 +3,10 @@ const express = require("express"),
       server = require("http").createServer(app),
       io = require("socket.io")(server),
       AdmZip = require('adm-zip'),
-      fs = require("fs")
-
+      fs = require("fs"),
+      mongoose = require('mongoose'),
+      bodyParser = require('body-parser'),
+      user = require('./routes/user.route');
 
 const CANVAS_ROWS = 500
 const CANVAS_COLS = 500
@@ -17,8 +19,11 @@ var canvas = [ ]
 var updates = []
 var users = {}
 var clients = 0
-
 var dir = './' + project_name;
+
+mongoose.connect('mongodb://localhost/jwtauth');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
@@ -75,6 +80,13 @@ if (fs.existsSync(project_name + '/canvas.txt')) {
 }
 
 app.use(express.static("public"))
+app.use('/user', user);
+
+app.get('/checking', function(req, res){
+   res.json({
+      "Tutorial": "Welcome to the Node express JWT Tutorial"
+   });
+});
 
 io.on("connection", socket => {
     ++clients
@@ -141,7 +153,7 @@ io.on("connection", socket => {
     })
 })
 
-setInterval(saveBackup, 1000 * 60 * 1);
+setInterval(saveBackup, 1000 * 60 * 1)
 setInterval(saveCanvas, 1000 * 60 * 1)
 
 setInterval(function(){io.emit('update', updates);updates = [];},1200)
