@@ -3,16 +3,17 @@ const express = require("express"),
       server = require("http").createServer(app),
       io = require("socket.io")(server),
       AdmZip = require('adm-zip'),
-      fs = require("fs"),
-      mongoose = require('mongoose'),
-      bodyParser = require('body-parser'),
-      user = require('./routes/user.route');
+      fs = require("fs")
 
 const CANVAS_ROWS = 500
 const CANVAS_COLS = 500
+const pixelCooldown = 0.1
+const baseFunds = 127000000
+const saveCanvasInterval = 10
+const saveBackupInterval = 60
 const project_name = "Cartographer2"
 const names = [
-    "Spartan", "Coconut", "Cortana", "Nerd", "Johan", "Cowmilk", "Bitterbal", "Knight", "Heineken", "Cold Ketchup", "Heinz", "Mars", "Johnson", "Bill", "Recon", "Beer", "Chicken", "Rooster", "Wheezy", "Grunt", "Elite", "Arbiter", "Liberal", "Sir", "Marine", "Jul Ma'am", "Chief", "Tomato", "Captain", "Monitor"
+    "Spartan", "Coconut", "Cortana", "Nerd", "Johan", "Cowmilk", "Bitterbal", "Knight", "Heineken", "Cold Ketchup", "Heinz", "Mars", "Johnson", "Bill", "Recon", "Beer", "Chicken", "Rooster", "Wheezy", "Grunt", "Elite", "Arbiter", "Liberal", "Sir", "Marine", "Jul Ma'am", "Chief", "Tomato", "Captain", "Monitor", "Butter", "Unknown", "King", "Wizard", "Space Monk"
 ]
 
 var canvas = [ ]
@@ -21,9 +22,6 @@ var users = {}
 var clients = 0
 var dir = './' + project_name;
 
-mongoose.connect('mongodb://localhost/jwtauth');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
@@ -80,13 +78,6 @@ if (fs.existsSync(project_name + '/canvas.txt')) {
 }
 
 app.use(express.static("public"))
-app.use('/user', user);
-
-app.get('/checking', function(req, res){
-   res.json({
-      "Tutorial": "Welcome to the Node express JWT Tutorial"
-   });
-});
 
 io.on("connection", socket => {
     ++clients
@@ -96,14 +87,19 @@ io.on("connection", socket => {
         users[clientIp] = {
             "messageTime": new Date(),
             "pixelTime": new Date(),
-            "name": generateName()
+            "lastAction": null,
+            "name": generateName(),
+            "funds": baseFunds
         }
         if(users[clientIp].name == null) {
             users[clientIp].name = generateName()
         }
     }
     
-    socket.emit("confirmed", users[clientIp].name)
+    socket.emit("confirmed", {
+        "username": users[clientIp].name,
+        "funds": users[clientIp].funds
+    })
     socket.emit("canvas", canvas)
     io.emit("alert", "Welcome " + users[clientIp].name + "!")
     io.emit("users", clients)
@@ -117,21 +113,58 @@ io.on("connection", socket => {
         socket.emit("canvas", canvas)
     })
     
-    socket.on("color", data => {
+    socket.on("undo", function(data, callback){
+        if(users[clientIp].lastAction != null) {
+            let row = users[clientIp].lastAction.row
+            let col = users[clientIp].lastAction.col
+            let color = users[clientIp].lastAction.color
+            canvas[row][col] = color
+            ++users[clientIp].funds
+            io.emit("update", {
+                "col": col,
+                "row": row,
+                "color": color
+            })
+            users[clientIp].lastAction = null
+            callback(false, "Undone last action.", users[clientIp].funds)
+        }
+    })
+    
+    socket.on("color", function(data, callback){
         var clientIp = socket.request.connection.remoteAddress;
         var now = new Date();
         var seconds = (now.getTime() - users[clientIp].pixelTime.getTime()) / 1000;
-        if(seconds > 0.1 && data != "") {
-            if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
-                canvas[data.row][data.col] = data.color
-                users[clientIp].pixelTime = new Date();
-                updates.push({
-                    col: data.col,
-                    row: data.row,
-                    color: data.color
-                })
+        if(users[clientIp].funds > 0) {
+            if(seconds > pixelCooldown && data != "") {
+                if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
+                    --users[clientIp].funds
+                    callback(false, "Pixel accepted.", users[clientIp].funds)
+                    users[clientIp].lastAction = {
+                        "col": data.col,
+                        "row": data.row,
+                        "color": canvas[data.row][data.col]
+                    }
+                    canvas[data.row][data.col] = data.color
+                    users[clientIp].pixelTime = new Date();
+                    socket.broadcast.emit("update", data)
+                } else {
+                    callback(true, "Pixel out of bounds")
+                    return
+                }
+            } else {
+                callback(true, "You are going to fast!", {
+                        col: data.col,
+                        row: data.row,
+                        color: canvas[data.row][data.col]
+                    })
+                return
             }
         } else {
+            callback(true, "Insufficient funds.", {
+                        col: data.col,
+                        row: data.row,
+                        color: canvas[data.row][data.col]
+                    })
             return
         }
     })
@@ -140,7 +173,7 @@ io.on("connection", socket => {
         var clientIp = socket.request.connection.remoteAddress;
         var now = new Date();
         var seconds = (now.getTime() - users[clientIp].messageTime.getTime()) / 1000;
-        if(seconds > 1 && data.message != "") {
+        if(seconds > pixelCooldown && data.message != "") {
             var message = data.message.replace(/(<([^>]+)>)/ig,"");
             io.emit("newMessage", {
                 message: message,
@@ -153,11 +186,11 @@ io.on("connection", socket => {
     })
 })
 
-setInterval(saveBackup, 1000 * 60 * 1)
-setInterval(saveCanvas, 1000 * 60 * 1)
+setInterval(saveBackup, 1000 * saveBackupInterval)
+setInterval(saveCanvas, 1000 * saveCanvasInterval)
 
-setInterval(function(){io.emit('update', updates);updates = [];},1200)
-setInterval(function(){io.emit('canvas', canvas);},24000)
+//setInterval(function(){io.emit('update', updates);updates = [];},2000)
+setInterval(function(){io.emit('canvas', canvas);}, 30000)
 
 server.listen(3000)
 console.log('Server successfully started on: ' + project_name)

@@ -9,6 +9,7 @@ var lastPlaced = new Date();
 var fullCanvas = [];
 var xPos;
 var yPos;
+var funds;
 
 function renderGrid() {
     var grid = document.getElementById("grid");
@@ -107,6 +108,22 @@ $(document).ready(() => {
         }
     });
     
+    $("#undo").click(function(e){
+        socket.emit("undo", null, function(err, message, data) {
+            if(!err) {
+                $("#funds").text(data);
+            }
+        })
+    });
+    
+    $('#hexcolor').on('input', function() { 
+        $('#color').val($(this).val());
+    });
+    
+    $('#color').on('input', function() { 
+        $('#hexcolor').val($(this).val());
+    });
+    
     message.addEventListener("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
@@ -124,16 +141,17 @@ $(document).ready(() => {
     
     function handleMouseMove(e){
 
-      if(!eyedropperIsActive){return;}
-        
+        if(!eyedropperIsActive){return;}
+
         var offset = $("#place").offset()
 
-      mouseX = Math.floor(((e.clientX - offset.left)/zX)/scale)
-      mouseY = Math.floor(((e.clientY - offset.top)/zX)/scale)
+        mouseX = Math.floor(((e.clientX - offset.left)/zX)/scale)
+        mouseY = Math.floor(((e.clientY - offset.top)/zX)/scale)
 
-      // Put your mousemove stuff here
-      var eyedropColor=getPixelColor(mouseX,mouseY);
-      $("#color").val(rgb2hex(eyedropColor));
+          // Put your mousemove stuff here
+        var eyedropColor=getPixelColor(mouseX,mouseY);
+        $("#color").val(rgb2hex(eyedropColor));
+        $("#hexcolor").val(rgb2hex(eyedropColor));
 
     }
     
@@ -144,15 +162,26 @@ $(document).ready(() => {
             var yPosition = Math.floor(((e.clientY - offset.top)/zX)/scale)
             var now = new Date()
             var seconds = (now.getTime() - lastPlaced.getTime()) / 1000;
-            if(seconds > 0.1) {
-                lastPlaced = now;
-                ctx.fillStyle = $("#color").val()
-                ctx.fillRect(xPosition * scale, yPosition * scale, scale, scale)
-                socket.emit("color", {
-                    col: xPosition,
-                    row: yPosition,
-                    color: $("#color").val()
-                })
+            if(funds > 0) {
+                if(seconds > 0.1) {
+                    lastPlaced = now;
+                    ctx.fillStyle = $("#color").val()
+                    ctx.fillRect(xPosition * scale, yPosition * scale, scale, scale)
+                    socket.emit("color", {
+                        col: xPosition,
+                        row: yPosition,
+                        color: $("#color").val()
+                    }, function(err, message, data){
+                        if (err) {
+                            alert(message)
+                            ctx.fillStyle = data.color
+                            ctx.fillRect(data.col * scale, data.row * scale, scale, scale)
+                            fullCanvas[data.row][data.col] = color
+                        } else {
+                            $("#funds").text(data);
+                        }
+                    })
+                }
             }
             //console.log("Clicked!", xPosition, yPosition, zX)
             //console.log("e!",((e.clientX - offset.left)/zX), ((e.clientY - offset.top)/zX), zX)
@@ -181,13 +210,11 @@ $(document).ready(() => {
         }
     })
     
-    socket.on("update", updateDate => {
+    socket.on("update", data => {
         if(fullCanvas != []) {
-        updateDate.forEach((change) => {
-            ctx.fillStyle = change.color
-            ctx.fillRect(change.col * scale, change.row * scale, scale, scale)
-            fullCanvas[change.row][change.col] = color
-        })
+            ctx.fillStyle = data.color
+            ctx.fillRect(data.col * scale, data.row * scale, scale, scale)
+            fullCanvas[data.row][data.col] = color
         } else {
             socket.emit('canvas')
         }
@@ -206,8 +233,10 @@ $(document).ready(() => {
         $("#online").text(users);
     })
     
-    socket.on("confirmed", username => {
-        $("#username").text(username);
+    socket.on("confirmed", account => {
+        funds = account.funds;
+        $("#username").text(account.username);
+        $("#funds").text(account.funds);
     })
     
     $("#canvas-container")[0].addEventListener('wheel', function (e) {

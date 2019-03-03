@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>pixNano</title>
+        <title>PixNano</title>
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="js/place.js"></script>
@@ -15,16 +15,28 @@
         gtag('js', new Date());
         gtag('config', 'UA-135324688-1');
         </script>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-7892498439055035",
+          enable_page_level_ads: true
+        });
+        </script>
     </head>
     <body>
-        <div class="controls">
+        <div class="rightMenu">
             <span style="height: 35px;width: 100%;line-height: 2rem;">Color: <button id="startDropper"><img src="icons/eyedropper.png" height="auto"></button><input class="color" type="color" id="color"></span>
-            <br>
+            <input type="text" id="hexcolor" value="" placeholder="hex: #rrggbb">
             <form action="" style="margin-bottom: 0px;margin-top: 15px;">
                 <input type="button" id="1" value="EDIT MODE" onclick="toggle(this);">
             </form>
-            <br>
-            <button id="toggleGrid">Toggle Grid</button>
+            <button id="toggleGrid" style="margin-top: 15px;">Toggle Grid</button>
+            <button id="undo" style="margin-top: 15px;background-color: #cc5151;">undo</button>
+        </div>
+        
+        <div class="leftMenu">
+            <h1>Px:</h1> <span id="funds">0</span>
+            <button disabled style="margin-bottom: 0px;margin-top: 15px;" id="recharge">Watch ad: +50Px</button>
         </div>
         
         <div class="chat">
@@ -38,11 +50,12 @@
         <div id="canvas-container">
             <div id="zoom-controller" style="transform: scale(1.5);">
                 <div id="camera-controller" style="height: 500px; width: 500px; top:0px; left:0px;">
-                    <div id="template-images"></div>
                     <canvas id="place" height="500" width="500"></canvas>
                     <canvas id="grid" height="500" width="500"></canvas>
                 </div>
             </div>
         </div>
+        
+        <div class="footer">&copy; Copyright 2019 PixNano.com</div>
     </body>
 </html>
