@@ -1,7 +1,7 @@
 const currentVersion = "1.0.0";
 
 var editMode = false;
-var zX = 1.5;
+var zX = 1.3;
 var scale = 1
 var maxZoom = 32
 var minZoom = 1
