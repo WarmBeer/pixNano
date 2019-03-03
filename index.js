@@ -12,6 +12,7 @@ const baseFunds = 127000000
 const saveCanvasInterval = 10
 const saveBackupInterval = 60
 const project_name = "Cartographer2"
+const currentVersion = "1.0.0"
 const names = [
     "Spartan", "Coconut", "Cortana", "Nerd", "Johan", "Cowmilk", "Bitterbal", "Knight", "Heineken", "Cold Ketchup", "Heinz", "Mars", "Johnson", "Bill", "Recon", "Beer", "Chicken", "Rooster", "Wheezy", "Grunt", "Elite", "Arbiter", "Liberal", "Sir", "Marine", "Jul Ma'am", "Chief", "Tomato", "Captain", "Monitor", "Butter", "Unknown", "King", "Wizard", "Space Monk"
 ]
@@ -80,6 +81,7 @@ if (fs.existsSync(project_name + '/canvas.txt')) {
 app.use(express.static("public"))
 
 io.on("connection", socket => {
+    
     ++clients
     var clientIp = socket.request.connection.remoteAddress;
     
@@ -131,6 +133,9 @@ io.on("connection", socket => {
     })
     
     socket.on("color", function(data, callback){
+        if(data.version != currentVersion) {
+            return
+        }
         var clientIp = socket.request.connection.remoteAddress;
         var now = new Date();
         var seconds = (now.getTime() - users[clientIp].pixelTime.getTime()) / 1000;

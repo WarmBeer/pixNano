@@ -1,3 +1,5 @@
+const currentVersion = 1.0.0;
+
 var editMode = false;
 var zX = 1.5;
 var scale = 1
@@ -168,6 +170,7 @@ $(document).ready(() => {
                     ctx.fillStyle = $("#color").val()
                     ctx.fillRect(xPosition * scale, yPosition * scale, scale, scale)
                     socket.emit("color", {
+                        version: currentVersion,
                         col: xPosition,
                         row: yPosition,
                         color: $("#color").val()
