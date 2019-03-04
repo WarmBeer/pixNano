@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>PixNano</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="js/place.js"></script>
@@ -16,15 +17,15 @@
         gtag('js', new Date());
         gtag('config', 'UA-135324688-1');
         </script>
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-          google_ad_client: "ca-pub-7892498439055035",
-          enable_page_level_ads: true
-        });
-        </script>
     </head>
     <body>
+        <!-- <div id="overlay">
+            <div id="showBox">
+                <span style="font-size: 28px;color: #efefef;font-weight: 700;line-height: 50px;">BUY: <span style="font-size: 28px;color: #00b4db;">100</span><h1 style="font-size: 28px;">Px</h1></span>
+                <div id="nano-button" style="float: right;"></div>
+            </div>
+        </div> -->
+        
         <div class="rightMenu">
             <span style="height: 35px;width: 100%;line-height: 2rem;">Color: <button id="startDropper"><img src="icons/eyedropper.png" height="auto"></button><input class="color" type="color" id="color"></span>
             <input type="text" id="hexcolor" value="" placeholder="#rrggbb">
@@ -35,14 +36,26 @@
             <button id="undo" style="margin-top: 15px;background-color: #cc5151;">undo</button>
         </div>
         
-        
+        <div id="adBanner">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Pn -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-7892498439055035"
+                 data-ad-slot="3105818297"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
         
         <div class="leftMenu">
-        <div class="logo">
-            <img src="icons/logo.png" height=auto width=auto>
-        </div>
+            <div class="logo">
+                <img src="icons/logo.png" height=auto width=auto>
+            </div>
             <h1>Px:</h1> <span id="funds">0</span>
-            <button disabled style="margin-bottom: 0px;margin-top: 15px;" id="recharge">Watch ad for +50Px</button>
+            <button disabled style="margin-bottom: 0px;margin-top: 15px;" id="recharge">Buy 100Px</button>
         </div>
         
         <div class="chat">
@@ -63,5 +76,28 @@
         </div>
         
         <div class="footer">&copy; Copyright 2019 PixNano.com</div>
+        <script src="https://brainblocks.io/brainblocks.js"></script>
+
+        <script>
+            // Render the Nano button
+
+            brainblocks.Button.render({
+
+                // Pass in payment options
+
+                payment: {
+                    destination: 'nano_164xaa1ojy6qmq9e8t94mz8izr4mkf1sojb6xrmstru5jsif48g5kegcqg7y',
+                    currency:    'rai',
+                    amount:      1000000
+                },
+
+                // Handle successful payments
+
+                onPayment: function(data) {
+                    console.log('Payment successful!', data.token);
+                }
+
+            }, '#nano-button');
+        </script>
     </body>
 </html>

@@ -27,6 +27,7 @@ var dir = './' + project_name;
 if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
     fs.mkdirSync(dir + '/backups');
+    fs.mkdirSync('./users');
 }
 
 function saveCanvas() {
@@ -39,11 +40,29 @@ function saveCanvas() {
     }
 }
 
+function saveUsers() {
+    if(users != {}) {
+        fs.writeFile('users/clients.txt', JSON.stringify(users), (err) => {
+            if(err) throw err
+
+            //console.log("Canvas saved!")
+        })
+    }
+}
+
 function loadCanvas() {
     fs.readFile(project_name + '/canvas.txt', 'utf-8', (err, canvasData) => {
         if(err) throw err
 
         canvas = JSON.parse(canvasData)
+    })
+}
+
+function loadUsers() {
+    fs.readFile('users/clients.txt', 'utf-8', (err, userData) => {
+        if(err) throw err
+
+        users = JSON.parse(userData)
     })
 }
 
@@ -65,9 +84,14 @@ function generateName(){
 	return name;
 }
 
+if (fs.existsSync('users/clients.txt')) {
+    loadUsers()
+} else {
+    users = {}
+}
+
 if (fs.existsSync(project_name + '/canvas.txt')) {
     loadCanvas()
-
 } else {
     for(var rows = 0; rows < CANVAS_ROWS; rows++){
         canvas[rows] = [ ]
@@ -137,8 +161,8 @@ io.on("connection", socket => {
             return
         }
         var clientIp = socket.request.connection.remoteAddress;
-        var now = new Date();
-        var seconds = (now.getTime() - users[clientIp].pixelTime.getTime()) / 1000;
+        var lastUpdate = new Date(Date.parse(users[clientIp].pixelTime))
+        var seconds = (Date.now() - lastUpdate.getTime()) / 1000;
         if(users[clientIp].funds > 0) {
             if(seconds > pixelCooldown && data != "") {
                 if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
@@ -176,8 +200,7 @@ io.on("connection", socket => {
     
     socket.on("message", data => {
         var clientIp = socket.request.connection.remoteAddress;
-        var now = new Date();
-        var seconds = (now.getTime() - users[clientIp].messageTime.getTime()) / 1000;
+        var seconds = (Date.now() - users[clientIp].messageTime.getTime()) / 1000;
         if(seconds > pixelCooldown && data.message != "") {
             var message = data.message.replace(/(<([^>]+)>)/ig,"");
             io.emit("newMessage", {
@@ -193,6 +216,7 @@ io.on("connection", socket => {
 
 setInterval(saveBackup, 1000 * saveBackupInterval)
 setInterval(saveCanvas, 1000 * saveCanvasInterval)
+//setInterval(saveUsers, 1000 * 10)
 
 //setInterval(function(){io.emit('update', updates);updates = [];},2000)
 setInterval(function(){io.emit('canvas', canvas);}, 30000)
