@@ -119,7 +119,11 @@ $(document).ready(() => {
     });
     
     $('#hexcolor').on('input', function() { 
-        $('#color').val($(this).val());
+        if($(this). val().charAt(0) == '#') {
+            $('#color').val($(this).val());
+        } else {
+            $('#color').val('#' + $(this).val());
+        }
     });
     
     $('#color').on('input', function() { 

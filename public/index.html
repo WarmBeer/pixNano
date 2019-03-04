@@ -27,7 +27,7 @@
     <body>
         <div class="rightMenu">
             <span style="height: 35px;width: 100%;line-height: 2rem;">Color: <button id="startDropper"><img src="icons/eyedropper.png" height="auto"></button><input class="color" type="color" id="color"></span>
-            <input type="text" id="hexcolor" value="" placeholder="hex: #rrggbb">
+            <input type="text" id="hexcolor" value="" placeholder="#rrggbb">
             <form action="" style="margin-bottom: 0px;margin-top: 15px;">
                 <input type="button" id="1" value="EDIT MODE" onclick="toggle(this);">
             </form>
@@ -35,9 +35,14 @@
             <button id="undo" style="margin-top: 15px;background-color: #cc5151;">undo</button>
         </div>
         
+        
+        
         <div class="leftMenu">
+        <div class="logo">
+            <img src="icons/logo.png" height=auto width=auto>
+        </div>
             <h1>Px:</h1> <span id="funds">0</span>
-            <button disabled style="margin-bottom: 0px;margin-top: 15px;" id="recharge">Watch ad: +50Px</button>
+            <button disabled style="margin-bottom: 0px;margin-top: 15px;" id="recharge">Watch ad for +50Px</button>
         </div>
         
         <div class="chat">

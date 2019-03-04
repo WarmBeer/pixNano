@@ -68,11 +68,11 @@ body {
 }
 
 .chat {
-    top: 135px;
+    top: 190px;
     z-index: 5;
     width: 190px;
     height: 500px;
-    position: absolute;
+    position: relative;
     color: #fff;
     margin: 0px;
     padding: 15px;
@@ -307,4 +307,13 @@ h1 {
     width: 100%;
     text-align: center;
     color: #005C97;
+    z-index: 5;
+}
+
+.logo {
+    z-index: 5;
+    width: auto;
+    height: auto;
+    position: relative;
+    display: inline-block;
 }
