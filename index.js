@@ -1,7 +1,12 @@
-const express = require("express"),
+var   express = require("express"),
       app = express(),
       fs = require("fs"),
-      server = require("http").createServer(app),
+      options = {
+        key: fs.readFileSync("./ssl/private.key"),
+        cert: fs.readFileSync("./ssl/certificate.crt"),
+        ca: fs.readFileSync('./ssl/ca_bundle.crt')
+        },
+      server = require("https").createServer(options, app),
       io = require("socket.io")(server),
       AdmZip = require('adm-zip');
 
