@@ -26,8 +26,6 @@ body {
 #place {
     position: absolute;
     transform-origin: 0 0;
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.55);
 }
 
@@ -99,8 +97,6 @@ body {
     opacity: 0.25;
     pointer-events: none;
     transform-origin: 0 0;
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
 }
 
 input {
@@ -350,4 +346,10 @@ h1 {
     height: 420px;
     position: absolute;
     margin: 0px;
+}
+
+canvas {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -ms-crisp-edges;
+    image-rendering: pixelated;
 }

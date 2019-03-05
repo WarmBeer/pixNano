@@ -13,6 +13,11 @@ var xPos;
 var yPos;
 var funds;
 
+if (typeof console === "undefined"){
+    console={};
+    console.log = function(){};
+}
+
 function renderGrid() {
     var grid = document.getElementById("grid");
     var gridctx = grid.getContext("2d");

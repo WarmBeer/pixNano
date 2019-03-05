@@ -1,9 +1,17 @@
-const express = require("express"),
+var   express = require("express"),
       app = express(),
-      server = require("http").createServer(app),
+      fs = require("fs"),
+      options = {
+        key: fs.readFileSync("./ssl/Key.key", "utf8"),
+        cert: fs.readFileSync("./ssl/PixNano_com.cer"),
+        ca: [
+                fs.readFileSync('./ssl/Sectigo_RSA_Domain_Validation_Secure_Server_CA.crt'),
+                fs.readFileSync('./ssl/USERTrust_RSA_Certification_Authority.crt') 
+            ]
+        },
+      server = require("https").createServer(options, app),
       io = require("socket.io")(server),
-      AdmZip = require('adm-zip'),
-      fs = require("fs")
+      AdmZip = require('adm-zip');
 
 const CANVAS_ROWS = 500
 const CANVAS_COLS = 500
@@ -23,7 +31,6 @@ var users = {}
 var clients = 0
 var dir = './' + project_name;
 
-
 if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
     fs.mkdirSync(dir + '/backups');
@@ -42,7 +49,7 @@ function saveCanvas() {
 
 function saveUsers() {
     if(users != {}) {
-        fs.writeFile('users/clients.txt', JSON.stringify(users), (err) => {
+        fs.writeFile('./users/clients.txt', JSON.stringify(users), (err) => {
             if(err) throw err
 
             //console.log("Canvas saved!")
