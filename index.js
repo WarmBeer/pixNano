@@ -4,8 +4,8 @@ var   express = require("express"),
       options = {
         key: fs.readFileSync("./ssl/private.key"),
         cert: fs.readFileSync("./ssl/certificate.crt"),
-        ca: fs.readFileSync('./ssl/ca_bundle.crt')
-        },
+        ca: fs.readFileSync("./ssl/ca_bundle.crt"),
+      },
       server = require("https").createServer(options, app),
       io = require("socket.io")(server),
       AdmZip = require('adm-zip');
