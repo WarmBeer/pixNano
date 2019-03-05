@@ -1,15 +1,7 @@
-var   express = require("express"),
+const express = require("express"),
       app = express(),
       fs = require("fs"),
-      options = {
-        key: fs.readFileSync("./ssl/Key.key", "utf8"),
-        cert: fs.readFileSync("./ssl/PixNano_com.cer"),
-        ca: [
-                fs.readFileSync('./ssl/Sectigo_RSA_Domain_Validation_Secure_Server_CA.crt'),
-                fs.readFileSync('./ssl/USERTrust_RSA_Certification_Authority.crt') 
-            ]
-        },
-      server = require("https").createServer(options, app),
+      server = require("http").createServer(app),
       io = require("socket.io")(server),
       AdmZip = require('adm-zip');
 
