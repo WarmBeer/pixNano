@@ -133,6 +133,7 @@ input[type=button], button {
     text-transform: uppercase;
     cursor: pointer;
     border-radius: 4px;
+    font-weight: bold;
 }
 
 .color {
