@@ -1,4 +1,5 @@
 var   express = require("express"),
+      http = express.createServer(),
       app = express(),
       fs = require("fs"),
       options = {
@@ -107,6 +108,10 @@ if (fs.existsSync(project_name + '/canvas.txt')) {
 }
 
 app.use(express.static("public"))
+
+http.get('*', function(req, res) {  
+    res.redirect('https://' + req.headers.host + req.url);
+})
 
 io.on("connection", socket => {
     
@@ -225,5 +230,6 @@ setInterval(saveCanvas, 1000 * saveCanvasInterval)
 //setInterval(function(){io.emit('update', updates);updates = [];},2000)
 setInterval(function(){io.emit('canvas', canvas);}, 30000)
 
+http.listen(80)
 server.listen(443)
 console.log('Server successfully started on: ' + project_name)
