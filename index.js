@@ -1,5 +1,5 @@
 var   express = require("express"),
-      http = express.createServer(),
+      http = require("http").createServer(),
       app = express(),
       fs = require("fs"),
       options = {
