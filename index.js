@@ -165,9 +165,14 @@ io.on("connection", socket => {
         if(data.version != currentVersion) {
             return
         }
-        var clientIp = socket.request.connection.remoteAddress;
-        var lastUpdate = new Date(Date.parse(users[clientIp].pixelTime))
-        var seconds = (Date.now() - lastUpdate.getTime()) / 1000;
+        let clientIp = socket.request.connection.remoteAddress;
+        let lastUpdate = new Date(Date.parse(users[clientIp].pixelTime));
+        let seconds = (Date.now() - lastUpdate.getTime()) / 1000;
+        let currentPixel = {
+            col: data.col,
+            row: data.row,
+            color: canvas[data.row][data.col]
+        };
         if(users[clientIp].funds > 0) {
             if(seconds > pixelCooldown && data != "") {
                 if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
@@ -191,19 +196,11 @@ io.on("connection", socket => {
                     return
                 }
             } else {
-                callback(true, "You are going to fast!", {
-                        col: data.col,
-                        row: data.row,
-                        color: canvas[data.row][data.col]
-                    })
+                callback(true, "You are going to fast!", currentPixel)
                 return
             }
         } else {
-            callback(true, "Insufficient funds.", {
-                        col: data.col,
-                        row: data.row,
-                        color: canvas[data.row][data.col]
-                    })
+            callback(true, "Insufficient funds.", currentPixel)
             return
         }
     })

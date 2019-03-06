@@ -184,7 +184,7 @@ $(document).ready(() => {
                         row: yPosition,
                         color: $("#color").val()
                     }, function(err, message, data){
-                        if (err) {
+                        if (err && data != null) {
                             //alert(message)
                             ctx.fillStyle = data.color
                             ctx.fillRect(data.col * scale, data.row * scale, scale, scale)
@@ -256,7 +256,7 @@ $(document).ready(() => {
         
 
         dir = (e.deltaY > 0) ? -0.1 : 0.1;
-        dir = (zX>4) ? dir*4 : dir;
+        dir *= (Math.sqrt(zX)*1.6);
         if(dir > 0 && zX <= maxZoom || dir < 0 && zX > minZoom) {
             zX += dir;
             if(zX > maxZoom) zX = maxZoom;
