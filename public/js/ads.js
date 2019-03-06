@@ -22,6 +22,7 @@ function init() {
     closeButton = document.getElementById('closeButton');
   closeButton.addEventListener('click', hideAds);
     adOverlay = document.getElementById('overlay');
+    showBox = document.getElementById('showBox');
   setUpIMA();
 }
 
@@ -70,6 +71,7 @@ function createAdDisplayContainer() {
 
 function playAds() {
     adOverlay.classList.add("viewing");
+    showBox.classList.add("open");
   // Initialize the container. Must be done via a user action on mobile devices.
   videoContent.load();
   adDisplayContainer.initialize();
@@ -88,6 +90,7 @@ function playAds() {
 
 function hideAds() {
     adOverlay.classList.remove("viewing");
+    showBox.classList.remove("open");
     videoContent.pause();
 }
 
