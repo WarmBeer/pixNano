@@ -7,6 +7,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 body {
     background-color: #000034;
     font-family: "Nunito", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 1.1rem;
     line-height: 1.6rem;
     letter-spacing: 0.02em;

@@ -171,18 +171,23 @@ io.on("connection", socket => {
         if(users[clientIp].funds > 0) {
             if(seconds > pixelCooldown && data != "") {
                 if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
-                    --users[clientIp].funds
-                    callback(false, "Pixel accepted.", users[clientIp].funds)
-                    users[clientIp].lastAction = {
-                        "col": data.col,
-                        "row": data.row,
-                        "color": canvas[data.row][data.col]
+                    if(canvas[data.row][data.col] != data.color) {
+                        --users[clientIp].funds
+                        callback(false, "Pixel accepted.", users[clientIp].funds)
+                        users[clientIp].lastAction = {
+                            "col": data.col,
+                            "row": data.row,
+                            "color": canvas[data.row][data.col]
+                        }
+                        canvas[data.row][data.col] = data.color
+                        users[clientIp].pixelTime = new Date();
+                        socket.broadcast.emit("update", data)
+                    } else {
+                        callback(true, "Pixel is the same color.")
+                        return
                     }
-                    canvas[data.row][data.col] = data.color
-                    users[clientIp].pixelTime = new Date();
-                    socket.broadcast.emit("update", data)
                 } else {
-                    callback(true, "Pixel out of bounds")
+                    callback(true, "Pixel out of bounds.")
                     return
                 }
             } else {
