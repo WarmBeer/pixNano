@@ -175,6 +175,11 @@ io.on("connection", socket => {
         };
         if(users[clientIp].funds > 0) {
             if(seconds > pixelCooldown && data != "") {
+                let diff = (users[clientIp].lastAction != null) ? Math.sqrt(Math.abs(users[clientIp].lastAction.col - data.col)**2 + Math.abs(users[clientIp].lastAction.row - data.row)**2) : 0;
+                if(seconds < 2 && diff > 20) {
+                    callback(true, "Spamming detected.", currentPixel)
+                    return
+                }
                 if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
                     if(canvas[data.row][data.col] != data.color) {
                         --users[clientIp].funds
