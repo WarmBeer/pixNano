@@ -6,7 +6,6 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 
 body {
     background-color: #000034;
-    
     font-family: "Nunito", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1.1rem;
     line-height: 1.6rem;
@@ -54,21 +53,14 @@ body {
     z-index: 5;
     width: 160px;
     position: absolute;
-    background-color: #000034;
-    background: -webkit-linear-gradient(to right, #005c97, #363795); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #005c97, #363795); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    border: 1.5px solid #005C97;
     color: #fff;
-    border-radius: 4px;
     margin: 15px;
-    padding: 15px;
-    box-shadow: 0 4px 14px #005c97;
 }
 
 .chat {
     top: 190px;
     z-index: 5;
-    width: 190px;
+    width: 193px;
     height: 500px;
     position: absolute;
     color: #fff;
@@ -124,11 +116,11 @@ input[type=button], button {
     color: white;
     text-align: center;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    background: #3498db;
+    background: #0984e3;
     border: 0;
     text-transform: uppercase;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 8px;
     font-weight: bold;
 }
 
@@ -142,24 +134,21 @@ input[type=button], button {
 
 #text {
     bottom: 0px;
-    background-color: #212121AA;
-    /*border: 1px solid transparent;*/
+    background-color: #ffffff44;
     border-radius: 8px;
     cursor: default;
-    width: 190px;
+    width: 100%;
     height: 35px;
     text-transform:none;
     text-shadow: none;
-    /*box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.25);*/
     margin-bottom: 5px;
 }
 
 .container {
     background-color: #363795;
-    border: 1px solid transparent;
     border-radius: 8px;
     cursor: default;
-    width: 178px;
+    width: auto;
     text-transform: none;
     text-shadow: none;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
@@ -257,16 +246,9 @@ img {
     z-index: 5;
     width: 160px;
     position: absolute;
-    background-color: #000034;
-    background: -webkit-linear-gradient(to right, #005c97, #363795); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #005c97, #363795); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    border: 1.5px solid #005C97;
     color: #fff;
-    border-radius: 4px;
     right: 15px;
     top: 15px;
-    padding: 15px;
-    box-shadow: 0 4px 14px #005c97;
 }
 
 h1 {
@@ -284,7 +266,7 @@ h1 {
 
 #hexcolor {
     bottom: 0px;
-    background-color: #fff4;
+    background-color: #ffffff44;
     border-radius: 8px;
     cursor: default;
     height: 35px;
@@ -316,6 +298,8 @@ h1 {
 }
 
 #overlay {
+    display: block;
+    visibility: hidden;
     position: fixed;
     z-index: 8;
     background-color: #000a;
@@ -326,16 +310,13 @@ h1 {
 #showBox {
     position: relative;
     margin: auto;
-    top: 25%;
-    width: 40%;
+    background-color: #EDEDED;
+    top: 5%;
+    width: 80%;
     padding: 15px;
-    height: 50px;
-    background-color: #000034;
-    background: -webkit-linear-gradient(to right, #005c97, #363795); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #005c97, #363795); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    border: 1.5px solid #005C97;
-    box-shadow: 0 4px 14px #005c97;
+    height: 80%;
     border-radius: 8px;
+    max-width: 800px;
 }
 
 #adBanner {
@@ -352,4 +333,62 @@ canvas {
     image-rendering: -moz-crisp-edges;
     image-rendering: -ms-crisp-edges;
     image-rendering: pixelated;
+}
+
+.blueCon {
+    background-color: #000034;
+    background: -webkit-linear-gradient(to right, #005c97, #363795); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #005c97, #363795); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border: 1.5px solid #005C97;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 14px #005c97;
+}
+
+.chatHeader {
+    padding-top: 5px!important;
+    padding-bottom: 5px!important;
+    margin-bottom: 10px;
+}
+
+#mainContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#content, #adContainer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+#contentElement {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.viewing {
+    visibility: visible!important;
+}
+#headContainer {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#headContainer h1 {
+    color: #2E2E2E;
+}
+
+#closeButton {
+    float: right;
+    width: 40px;
+    height: 30px;
+    background-color: #d63031;
 }

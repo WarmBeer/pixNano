@@ -13,6 +13,8 @@
         <script src="js/jquery-ui.js"></script>
         <link rel="stylesheet" href="/css/style.css">
         <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+        <script type="text/javascript" src="/js/ads.js"></script>
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-135324688-1"></script>
         <script>
         window.dataLayer = window.dataLayer || [];
@@ -22,50 +24,45 @@
         </script>
     </head>
     <body>
-        <!-- <div id="overlay">
-            <div id="showBox">
-                <span style="font-size: 28px;color: #efefef;font-weight: 700;line-height: 50px;">BUY: <span style="font-size: 28px;color: #00b4db;">100</span><h1 style="font-size: 28px;">Px</h1></span>
-                <div id="nano-button" style="float: right;"></div>
-            </div>
-        </div> -->
         
-        <div class="rightMenu">
+         <div id="overlay">
+            <div id="showBox">
+                <div id="headContainer"><h1>Watching ad...</h1><button id="closeButton">X</button></div>
+                <div id="mainContainer">
+                  <div id="content">
+                    <video id="contentElement">
+                    </video>
+                  </div>
+                  <div id="adContainer"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="rightMenu blueCon">
             <span style="height: 35px;width: 100%;line-height: 2;font-weight: bold;">Color: <button id="startDropper"><img src="icons/eyedropper.png" height="auto"></button><input class="color" type="color" id="color"></span>
             <input type="text" id="hexcolor" value="" placeholder="#rrggbb">
             <form action="" style="margin-bottom: 0px;margin-top: 15px;">
                 <input type="button" id="1" value="EDIT MODE" onclick="toggle(this);">
             </form>
             <button id="toggleGrid" style="margin-top: 15px;">Toggle Grid</button>
-            <button id="undo" style="margin-top: 15px;background-color: #cc5151;">undo</button>
+            <button id="undo" style="margin-top: 15px;background-color: #d63031;">undo</button>
         </div>
         
-        <div id="adBanner">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- Pn -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-7892498439055035"
-                 data-ad-slot="3105818297"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-        
-        <div class="leftMenu">
+        <div class="leftMenu blueCon">
             <div class="logo">
                 <img src="icons/logo.png" height=auto width=auto>
             </div>
             <h1>Px:</h1> <span id="funds">0</span>
-            <!---
-            <button disabled style="margin-bottom: 0px;margin-top: 15px;" id="recharge">Buy 100Px</button>
---->
+            
+            <button style="margin-bottom: 0px;margin-top: 15px;" id="playButton">Watch AD</button>
+
         </div>
         
         <div class="chat">
-            <span><span class="greenDot"> </span><span id="online">0</span><span id="username">Unknown</span></span>
-            <input type="text" id="text" value="" placeholder="Type something..">
+            <div class="chatHeader blueCon">
+                <span><span class="greenDot"> </span><span id="online">0</span><span id="username">Unknown</span></span>
+                <input type="text" id="text" value="" placeholder="Type something..">
+            </div>
             <div id="chat-window">
                 
             </div>
