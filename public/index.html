@@ -78,28 +78,6 @@
         </div>
         
         <div class="footer">&copy; Copyright 2019 PixNano.com | Donate: <a href="https://coingate.com/pay/pixnano" rel="noopener noreferrer nofollow" target="_blank"><img alt="CoinGate Payment Button" src="https://static.coingate.com/images/buttons/3.png" width="auto" height="24px"/></a></div>
-        <script src="https://brainblocks.io/brainblocks.js"></script>
-
-        <script>
-            // Render the Nano button
-
-            brainblocks.Button.render({
-
-                // Pass in payment options
-
-                payment: {
-                    destination: 'nano_164xaa1ojy6qmq9e8t94mz8izr4mkf1sojb6xrmstru5jsif48g5kegcqg7y',
-                    currency:    'rai',
-                    amount:      1000000
-                },
-
-                // Handle successful payments
-
-                onPayment: function(data) {
-                    console.log('Payment successful!', data.token);
-                }
-
-            }, '#nano-button');
-        </script>
+    
     </body>
 </html>
