@@ -59,7 +59,7 @@ body {
 }
 
 .chat {
-    top: 190px;
+    top: 165px;
     z-index: 5;
     width: 193px;
     height: 500px;
@@ -404,4 +404,10 @@ canvas {
     width: 40px;
     height: 30px;
     background-color: #d63031;
+}
+
+.pxInfo {
+    float: left;
+    color: #3498db;
+    font-size: 14px;
 }
