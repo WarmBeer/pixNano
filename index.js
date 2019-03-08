@@ -17,8 +17,9 @@ const pixelCooldown = 0.1
 const baseFunds = 25000
 const saveCanvasInterval = 10
 const saveBackupInterval = 60
+const spamDistance = 40;
 const project_name = "Cartographer2"
-const currentVersion = "1.0.0"
+const currentVersion = "1.1.0"
 const names = [
     "Spartan", "Coconut", "Cortana", "Nerd", "Johan", "Cowmilk", "Bitterbal", "Knight", "Heineken", "Cold Ketchup", "Heinz", "Mars", "Johnson", "Bill", "Recon", "Beer", "Chicken", "Rooster", "Wheezy", "Grunt", "Elite", "Arbiter", "Liberal", "Sir", "Marine", "Jul Ma'am", "Chief", "Tomato", "Captain", "Monitor", "Butter", "Unknown", "King", "Wizard", "Space Monk"
 ]
@@ -176,7 +177,7 @@ io.on("connection", socket => {
         if(users[clientIp].funds > 0) {
             if(seconds > pixelCooldown && data != "") {
                 let diff = (users[clientIp].lastAction != null) ? Math.sqrt(Math.abs(users[clientIp].lastAction.col - data.col)**2 + Math.abs(users[clientIp].lastAction.row - data.row)**2) : 0;
-                if(seconds < 2 && diff > 20) {
+                if(seconds < 2 && diff > spamDistance) {
                     callback(true, "Spamming detected.", currentPixel)
                     return
                 }
