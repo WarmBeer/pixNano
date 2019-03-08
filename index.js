@@ -164,6 +164,7 @@ io.on("connection", socket => {
     
     socket.on("color", function(data, callback){
         if(data.version != currentVersion) {
+            callback(true, "Refresh your browser!")
             return
         }
         let clientIp = socket.request.connection.remoteAddress;

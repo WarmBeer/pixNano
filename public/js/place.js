@@ -227,7 +227,7 @@ $(document).ready(() => {
                         color: $("#color").val()
                     }, function(err, message, data){
                         if (err && data != null) {
-                            if (message == "Spamming detected.") alert(message);
+                            if (message == "Spamming detected." || message == "Refresh your browser!") alert(message);
                             ctx.fillStyle = data.color
                             ctx.fillRect(data.col * scale, data.row * scale, scale, scale)
                             fullCanvas[data.row][data.col] = color
