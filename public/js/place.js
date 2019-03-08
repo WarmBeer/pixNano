@@ -1,6 +1,7 @@
 const currentVersion = "1.0.0";
 
 var editMode = false;
+var eyedropperIsActive = false;
 var zX = 1.3;
 var scale = 1
 var maxZoom = 32
@@ -12,6 +13,7 @@ var fullCanvas = [];
 var xPos;
 var yPos;
 var funds;
+var socket;
 
 if (typeof console === "undefined"){
     console={};
@@ -41,28 +43,51 @@ function renderGrid() {
     }
 }
 
-function toggle(button) {
-  if(document.getElementById("1").value=="EDIT MODE"){
+function toggleMode(button) {
+  if(!editMode){
       editMode = true;  
       document.getElementById("zoom-controller").style.cursor = "default";
-      document.getElementById("1").value="VIEW MODE";
+      button.innerHTML = "View Mode"
       $('#zoom-controller').draggable( "disable" )
-  }
-
-  else if(document.getElementById("1").value=="VIEW MODE"){
+  } else {
       editMode = false;  
       document.getElementById("zoom-controller").style.cursor = "move";
-      document.getElementById("1").value="EDIT MODE";
+      button.innerHTML = "Edit Mode"
       $('#zoom-controller').draggable( "enable" )
   }
 } 
 
+function toggleGrid() {
+    $("#grid").toggleClass("show");
+}
+
+function undo() {
+    $(document).ready(function(){
+        socket.emit("undo", null, function(err, message, data) {
+            if(!err) {
+                $("[id='funds']").text(data);
+            }
+        })
+    })
+}
+
+function startDrop() {
+    $(document).ready(function(){
+        eyedropperIsActive=!eyedropperIsActive;
+        $("#place").toggleClass("eyeDropper");
+        $("[id='startDropper']").toggleClass("active");
+    })
+};
+
+$(document).on('touchmove', function(e) {
+    e.preventDefault();
+});
+
 $(document).ready(() => {
-    var socket = io()
+    socket = io()
     var canvas = $("#place")[0]
     var ctx = canvas.getContext("2d")
-    var message = $("#text")[0]
-    var eyedropperIsActive=false; 
+    var message = $("#text")[0] 
     
     canvas.addEventListener("click", getClickPosition, false)
     renderGrid()
@@ -94,11 +119,6 @@ $(document).ready(() => {
     });
 
     // Activate reading pixel colors when a #startDropper button is clicked
-    $("#startDropper").click(function(e){
-        eyedropperIsActive=!eyedropperIsActive;
-        $("#place").toggleClass("eyeDropper");
-        $("#startDropper").toggleClass("active");
-    });
 
     // if the tool is active, report the color under the mouse
     $("#place").mousemove(function (e) {
@@ -111,23 +131,15 @@ $(document).ready(() => {
         if(eyedropperIsActive) {
             eyedropperIsActive=false;
             $("#place").removeClass("eyeDropper");
-            $("#startDropper").removeClass("active");
+            $("[id='startDropper']").removeClass("active");
         }
-    });
-    
-    $("#undo").click(function(e){
-        socket.emit("undo", null, function(err, message, data) {
-            if(!err) {
-                $("#funds").text(data);
-            }
-        })
     });
     
     $('#hexcolor').on('input', function() { 
         if($(this). val().charAt(0) == '#') {
-            $('#color').val($(this).val());
+            $("[id='color']").val($(this).val());
         } else {
-            $('#color').val('#' + $(this).val());
+            $("[id='color']").val('#' + $(this).val());
         }
     });
     
@@ -143,6 +155,36 @@ $(document).ready(() => {
             })
             $("#text").val("")
         }
+    });
+    
+    $("#zoomIn").click(function(e){
+        var dir;
+        
+        dir = 0.5;
+        dir *= (Math.sqrt(zX)*1.6);
+        if(dir > 0 && zX <= maxZoom || dir < 0 && zX > minZoom) {
+            zX += dir;
+            if(zX > maxZoom) zX = maxZoom;
+            if(zX < minZoom) zX = minZoom;
+            $("#zoom-controller")[0].style.transform = 'scale(' + zX + ')';
+        }
+        e.preventDefault();
+        return;
+    });
+    
+    $("#zoomOut").click(function(e){
+        var dir;
+        
+        dir = -0.5;
+        dir *= (Math.sqrt(zX)*1.6);
+        if(dir > 0 && zX <= maxZoom || dir < 0 && zX > minZoom) {
+            zX += dir;
+            if(zX > maxZoom) zX = maxZoom;
+            if(zX < minZoom) zX = minZoom;
+            $("#zoom-controller")[0].style.transform = 'scale(' + zX + ')';
+        }
+        e.preventDefault();
+        return;
     });
     
     function getPixelColor(x, y) {
@@ -161,7 +203,7 @@ $(document).ready(() => {
 
           // Put your mousemove stuff here
         var eyedropColor=getPixelColor(mouseX,mouseY);
-        $("#color").val(rgb2hex(eyedropColor));
+        $("[id='color']").val(rgb2hex(eyedropColor));
         $("#hexcolor").val(rgb2hex(eyedropColor));
 
     }
@@ -190,7 +232,7 @@ $(document).ready(() => {
                             ctx.fillRect(data.col * scale, data.row * scale, scale, scale)
                             fullCanvas[data.row][data.col] = color
                         } else {
-                            $("#funds").text(data);
+                            $("[id='funds']").text(data);
                         }
                     })
                 }
@@ -248,7 +290,7 @@ $(document).ready(() => {
     socket.on("confirmed", account => {
         funds = account.funds;
         $("#username").text(account.username);
-        $("#funds").text(account.funds);
+        $("[id='funds']").text(account.funds);
     })
     
     $("#canvas-container")[0].addEventListener('wheel', function (e) {
@@ -266,9 +308,5 @@ $(document).ready(() => {
         e.preventDefault();
         return;
     });
-    
-$("#toggleGrid").click(function(){
-    $("#grid").toggleClass("show");
-});
 
 })

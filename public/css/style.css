@@ -81,12 +81,13 @@ body {
 }
 
 #grid.show {
-    display: block!important;;
+    visibility: visible!important;
 }
 
 #grid {
     position: absolute;
-    display: none;
+    display: block;
+    visibility: hidden;
     z-index: 4;
     opacity: 0.25;
     pointer-events: none;
@@ -255,6 +256,10 @@ img {
     top: 15px;
 }
 
+.rightMenu button {
+    margin-top: 15px;
+}
+
 h1 {
     display: inline-block;
     width: auto;
@@ -410,4 +415,79 @@ canvas {
     float: left;
     color: #3498db;
     font-size: 14px;
+}
+
+.mob {
+    display: none;
+}
+
+@media screen and (max-width: 800px) {
+    .rightMenu, .leftMenu, .chat {
+        display: none;
+    }
+    
+    .mob {
+        display: block!important;
+    }
+}
+
+.mobileMenu {
+    text-align: center;
+    z-index: 5;
+    display: none;
+    position: fixed;
+    bottom: 60px;
+    width: 100%;
+}
+
+.mobile {
+    font-size: 0.65em;
+    width: 20%!important;
+    height: 56px!important;
+    float: left!important;
+    margin: 5px!important;
+}
+
+.mobileBackground {
+    display: inline-flex;
+    margin: 0 auto;
+    width: 90%;
+    height: 100%;
+    background-color: #363795;
+    border: 1.5px solid #005C97;
+    border-radius: 8px;
+}
+
+.red {
+    background-color: #d63031;
+}
+
+.mobileZoom {
+    z-index: 5;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 64px;
+    height: 132px;
+    background-color: #363795;
+    border: 1.5px solid #005C97;
+    border-radius: 8px;
+}
+
+.mobileZoom button {
+    font-size: 2em;
+    height: 56px;
+    width: 56px;
+    margin: 5px;
+}
+
+.mobileFunds {
+    z-index: 5;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: #363795;
+    border: 1.5px solid #005C97;
+    border-radius: 8px;
+    padding: 5px;
 }
