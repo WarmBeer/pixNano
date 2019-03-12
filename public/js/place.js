@@ -1,4 +1,4 @@
-const currentVersion = "1.1.2";
+const currentVersion = "1.1.3";
 
 var editMode = false;
 var eyedropperIsActive = false;

@@ -19,7 +19,7 @@ const saveCanvasInterval = 10
 const saveBackupInterval = 60
 const spamDistance = 40;
 const project_name = "Cartographer2"
-const currentVersion = "1.1.2"
+const currentVersion = "1.1.3"
 const names = [
     "Spartan", "Coconut", "Cortana", "Nerd", "Johan", "Cowmilk", "Bitterbal", "Knight", "Heineken", "Cold Ketchup", "Heinz", "Mars", "Johnson", "Bill", "Recon", "Beer", "Chicken", "Rooster", "Wheezy", "Grunt", "Elite", "Arbiter", "Liberal", "Sir", "Marine", "Jul Ma'am", "Chief", "Tomato", "Captain", "Monitor", "Butter", "Unknown", "King", "Wizard", "Space Monk"
 ]
