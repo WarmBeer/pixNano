@@ -14,7 +14,7 @@ var xPos;
 var yPos;
 var funds;
 var socket;
-var color = "#000000"
+var color = "#000000";
 
 if (typeof console === "undefined"){
     console={};
@@ -144,8 +144,10 @@ $(document).ready(() => {
     $('#hexcolor').on('input', function() { 
         if($(this). val().charAt(0) == '#') {
             $("[id='color']").val($(this).val());
+            color = $(this).val();
         } else {
             $("[id='color']").val('#' + $(this).val());
+            color = $(this).val();
         }
     });
     
@@ -211,6 +213,7 @@ $(document).ready(() => {
         var eyedropColor=getPixelColor(mouseX,mouseY);
         $("[id='color']").val(rgb2hex(eyedropColor));
         $("#hexcolor").val(rgb2hex(eyedropColor));
+        color = rgb2hex(eyedropColor);
 
     }
     
