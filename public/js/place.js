@@ -1,4 +1,4 @@
-const currentVersion = "1.1.0";
+const currentVersion = "1.1.2";
 
 var editMode = false;
 var eyedropperIsActive = false;
@@ -14,10 +14,16 @@ var xPos;
 var yPos;
 var funds;
 var socket;
+var color = "#000000"
 
 if (typeof console === "undefined"){
     console={};
     console.log = function(){};
+}
+
+function changeColor(input) {
+    console.log('yeet')
+    color = input.value;
 }
 
 function renderGrid() {
@@ -218,13 +224,13 @@ $(document).ready(() => {
             if(funds > 0) {
                 if(seconds > 0.1) {
                     lastPlaced = now;
-                    ctx.fillStyle = $("#color").val()
+                    ctx.fillStyle = color
                     ctx.fillRect(xPosition * scale, yPosition * scale, scale, scale)
                     socket.emit("color", {
                         version: currentVersion,
                         col: xPosition,
                         row: yPosition,
-                        color: $("#color").val()
+                        color: color
                     }, function(err, message, data){
                         if (err && data != null) {
                             if (message == "Spamming detected." || message == "Refresh your browser!") alert(message);

@@ -26,7 +26,7 @@
     </head>
     <body>
         
-         <div id="overlay">
+        <div id="overlay">
             <div id="showBox">
                 <div id="headContainer"><h1>Watching ad...</h1><button id="closeButton">X</button></div>
                 <div id="mainContainer">
@@ -50,7 +50,7 @@
         
         <div class="mobileMenu mob">
             <div class="mobileBackground">
-                <input class="color mobile" type="color" id="color">
+                <input class="color mobile" type="color" onchange="changeColor(this);">
                 <button id="startDropper" class="mobile" onclick="startDrop();"><img src="icons/eyedropper.png" height="auto"></button>
                 <button id="toggleMode" class="mobile" onclick="toggleMode(this);">Edit Mode</button>
                 <button id="toggleGrid" class="mobile" onclick="toggleGrid();">Toggle Grid</button>
@@ -59,7 +59,7 @@
         </div>
         
         <div class="rightMenu blueCon">
-            <span style="height: 35px;width: 100%;line-height: 2;font-weight: bold;">Color: <button id="startDropper" onclick="startDrop();"><img src="icons/eyedropper.png" height="auto"></button><input class="color" type="color" id="color"></span>
+            <span style="height: 35px;width: 100%;line-height: 2;font-weight: bold;">Color: <button id="startDropper" onclick="startDrop();"><img src="icons/eyedropper.png" height="auto"></button><input class="color" type="color" id="color" onchange="changeColor(this);"></span>
             <input type="text" id="hexcolor" value="" placeholder="#rrggbb">
             <button id="toggleMode" onclick="toggleMode(this);">Edit Mode</button>
             <button id="toggleGrid" onclick="toggleGrid();">Toggle Grid</button>
