@@ -147,7 +147,7 @@ $(document).ready(() => {
             color = $(this).val();
         } else {
             $("[id='color']").val('#' + $(this).val());
-            color = $(this).val();
+            color = '#' + $(this).val();
         }
     });
     
