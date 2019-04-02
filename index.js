@@ -17,7 +17,7 @@ const pixelCooldown = 0.1
 const baseFunds = 25000
 const saveCanvasInterval = 10
 const saveBackupInterval = 60
-const spamDistance = 40;
+const spamDistance = 50;
 const project_name = "Reclaimer"
 const currentVersion = "1.2.0"
 const names = [
@@ -167,22 +167,22 @@ io.on("connection", socket => {
             callback(true, "Refresh your browser!")
             return
         }
-        let clientIp = socket.request.connection.remoteAddress;
-        let lastUpdate = new Date(Date.parse(users[clientIp].pixelTime));
-        let seconds = (Date.now() - lastUpdate.getTime()) / 1000;
-        let currentPixel = {
-            col: data.col,
-            row: data.row,
-            color: canvas[data.row][data.col]
-        };
-        if(users[clientIp].funds > 0) {
-            if(seconds > pixelCooldown && data != "") {
-                let diff = (users[clientIp].lastAction != null) ? Math.sqrt(Math.abs(users[clientIp].lastAction.col - data.col)**2 + Math.abs(users[clientIp].lastAction.row - data.row)**2) : 0;
-                if(seconds < 2 && diff > spamDistance) {
-                    callback(true, "Spamming detected.", currentPixel)
-                    return
-                }
-                if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
+        if(data.row <= CANVAS_ROWS && data.row >= 0 && data.col <= CANVAS_COLS && data.col >= 0){
+            let clientIp = socket.request.connection.remoteAddress;
+            let lastUpdate = new Date(Date.parse(users[clientIp].pixelTime));
+            let seconds = (Date.now() - lastUpdate.getTime()) / 1000;
+            let currentPixel = {
+                col: data.col,
+                row: data.row,
+                color: canvas[data.row][data.col]
+            };
+            if(users[clientIp].funds > 0) {
+                if(seconds > pixelCooldown && data != "") {
+                    let diff = (users[clientIp].lastAction != null) ? Math.sqrt(Math.abs(users[clientIp].lastAction.col - data.col)**2 + Math.abs(users[clientIp].lastAction.row - data.row)**2) : 0;
+                    if(seconds < 1.2 && diff > spamDistance) {
+                        callback(true, "Spamming detected.", currentPixel)
+                        return
+                    }
                     if(canvas[data.row][data.col] != data.color) {
                         --users[clientIp].funds
                         callback(false, "Pixel accepted.", users[clientIp].funds)
@@ -199,16 +199,16 @@ io.on("connection", socket => {
                         return
                     }
                 } else {
-                    callback(true, "Pixel out of bounds.")
+                    callback(true, "You are going to fast!", currentPixel)
                     return
                 }
             } else {
-                callback(true, "You are going to fast!", currentPixel)
+                callback(true, "Insufficient funds.", currentPixel)
                 return
             }
         } else {
-            callback(true, "Insufficient funds.", currentPixel)
-            return
+                    callback(true, "Pixel out of bounds.")
+                    return
         }
     })
     
