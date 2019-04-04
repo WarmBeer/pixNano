@@ -14,7 +14,7 @@ var   express = require("express"),
 const CANVAS_ROWS = 500
 const CANVAS_COLS = 500
 const pixelCooldown = 0.1
-const baseFunds = 1000
+const baseFunds = 10000
 const saveCanvasInterval = 10
 const saveBackupInterval = 60
 const spamDistance = 50;
@@ -183,7 +183,7 @@ io.on("connection", socket => {
                 canvas[data.row][data.col] == "#FFFFFF") {
                             price = 1;
             } else {
-                price = 10;
+                price = 100;
             }
             if(users[clientIp].funds >= price) {
                 if(seconds > pixelCooldown && data != "") {
