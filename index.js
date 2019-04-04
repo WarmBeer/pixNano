@@ -14,7 +14,7 @@ var   express = require("express"),
 const CANVAS_ROWS = 500
 const CANVAS_COLS = 500
 const pixelCooldown = 0.1
-const baseFunds = 25000
+const baseFunds = 1000
 const saveCanvasInterval = 10
 const saveBackupInterval = 60
 const spamDistance = 50;
@@ -176,15 +176,24 @@ io.on("connection", socket => {
                 row: data.row,
                 color: canvas[data.row][data.col]
             };
-            if(users[clientIp].funds > 0) {
+            let price = 1;
+            if (canvas[data.row][data.col] == "#fff" ||
+                canvas[data.row][data.col] == "#FFF" || 
+                canvas[data.row][data.col] == "#ffffff" ||
+                canvas[data.row][data.col] == "#FFFFFF") {
+                            price = 1;
+            } else {
+                price = 10;
+            }
+            if(users[clientIp].funds >= price) {
                 if(seconds > pixelCooldown && data != "") {
                     let diff = (users[clientIp].lastAction != null) ? Math.sqrt(Math.abs(users[clientIp].lastAction.col - data.col)**2 + Math.abs(users[clientIp].lastAction.row - data.row)**2) : 0;
                     if(seconds < 1.2 && diff > spamDistance) {
                         callback(true, "Spamming detected.", currentPixel)
                         return
                     }
-                    if(canvas[data.row][data.col] != data.color) {
-                        --users[clientIp].funds
+                    if (canvas[data.row][data.col] != data.color) {
+                        users[clientIp].funds -= price;
                         callback(false, "Pixel accepted.", users[clientIp].funds)
                         users[clientIp].lastAction = {
                             "col": data.col,
@@ -228,8 +237,13 @@ io.on("connection", socket => {
     })
 })
 
-setInterval(saveBackup, 1000 * saveBackupInterval)
-setInterval(saveCanvas, 1000 * saveCanvasInterval)
+setInterval(saveBackup, 1000 * saveBackupInterval);
+setInterval(saveCanvas, 1000 * saveCanvasInterval);
+setInterval(function() {
+    for (var client in users) {
+        users[client].funds = baseFunds;
+    }
+}, 1000*3600*24);
 //setInterval(saveUsers, 1000 * 10)
 
 //setInterval(function(){io.emit('update', updates);updates = [];},2000)
